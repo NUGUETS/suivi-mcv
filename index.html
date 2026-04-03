@@ -1607,21 +1607,35 @@ async function setupParseAndGo(){
   const parsed=parseList(text,'fmt');
   if(!parsed.length){ toast('Aucun élève reconnu','err'); return; }
 
-  loading(true,'Préparation…');
-  let existing=DB.getEleves();
-  if(!existing.length){
-    const rows=Array.from({length:30},(_,i)=>({id:uuid(),nom:'',prenom:'',classe:'',ordre:i}));
-    await supaFetch('eleves','POST',rows);
-    CACHE.eleves=rows.map(r=>({id:r.id,nom:'',prenom:'',classe:''}));
-    existing=CACHE.eleves;
+  loading(true,'Connexion à Supabase…');
+  try {
+    // Recharger les élèves existants depuis Supabase
+    await DB.loadAll();
+    let existing=DB.getEleves();
+
+    // Si aucun élève en base, créer 30 lignes vides
+    if(!existing.length){
+      const newRows=Array.from({length:30},(_,i)=>({
+        id:uuid(), nom:'', prenom:'', classe:'', ordre:i
+      }));
+      await supaFetch('eleves','POST',newRows);
+      CACHE.eleves=newRows.map(r=>({id:r.id,nom:'',prenom:'',classe:''}));
+      existing=CACHE.eleves;
+    }
+
+    const rows=buildPreviewRows(parsed,existing);
+    window._setupRows=rows;
+    window._setupIds=existing.map(e=>e.id);
+    $('sp-count').textContent=`${parsed.length} élève${parsed.length>1?'s':''} détecté${parsed.length>1?'s':''}`;
+    $('sp-tbody').innerHTML=previewTableHTML(rows,'sp');
+    loading(false);
+    $('modal-setup-preview').classList.add('on');
+
+  } catch(e) {
+    loading(false);
+    toast('Erreur Supabase : '+e.message,'err');
+    console.error('setupParseAndGo error:', e);
   }
-  const rows=buildPreviewRows(parsed,existing);
-  window._setupRows=rows;
-  window._setupIds=existing.map(e=>e.id);
-  $('sp-count').textContent=`${parsed.length} élève${parsed.length>1?'s':''} détecté${parsed.length>1?'s':''}`;
-  $('sp-tbody').innerHTML=previewTableHTML(rows,'sp');
-  loading(false);
-  $('modal-setup-preview').classList.add('on');
 }
 
 function closeSetupPreview(){ $('modal-setup-preview').classList.remove('on'); }
@@ -1631,24 +1645,37 @@ async function spConfirm(){
   const rows=collectRows('sp',ids.length);
   const eleves=ids.map((id,i)=>({id,nom:rows[i].nom,prenom:rows[i].prenom,classe:rows[i].classe}));
   loading(true,'Enregistrement des élèves…');
-  await DB.saveAllEleves(eleves);
-  closeSetupPreview();
-  toast(`${rows.filter(r=>r.nom||r.prenom).length} élèves enregistrés ✓`,'ok');
-  renderDash();
-  showView('dashboard');
+  try {
+    await DB.saveAllEleves(eleves);
+    closeSetupPreview();
+    toast(`${rows.filter(r=>r.nom||r.prenom).length} élèves enregistrés ✓`,'ok');
+    renderDash();
+    showView('dashboard');
+  } catch(e) {
+    toast('Erreur Supabase : '+e.message,'err');
+    console.error('spConfirm error:', e);
+  }
   loading(false);
 }
 
 async function skipSetup(){
   loading(true,'Initialisation…');
-  let existing=DB.getEleves();
-  if(!existing.length){
-    const rows=Array.from({length:30},(_,i)=>({id:uuid(),nom:'',prenom:'',classe:'',ordre:i}));
-    await supaFetch('eleves','POST',rows);
-    CACHE.eleves=rows.map(r=>({id:r.id,nom:'',prenom:'',classe:''}));
+  try {
+    await DB.loadAll();
+    let existing=DB.getEleves();
+    if(!existing.length){
+      const newRows=Array.from({length:30},(_,i)=>({
+        id:uuid(), nom:'', prenom:'', classe:'', ordre:i
+      }));
+      await supaFetch('eleves','POST',newRows);
+      CACHE.eleves=newRows.map(r=>({id:r.id,nom:'',prenom:'',classe:''}));
+    }
+    renderDash();
+    showView('dashboard');
+  } catch(e) {
+    toast('Erreur Supabase : '+e.message,'err');
+    console.error('skipSetup error:', e);
   }
-  renderDash();
-  showView('dashboard');
   loading(false);
 }
 
