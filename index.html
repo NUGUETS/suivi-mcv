@@ -1347,7 +1347,7 @@ const NIVEAUX = {
 // ================================================================
 // CONFIGURATION SUPABASE — À MODIFIER OBLIGATOIREMENT
 // ================================================================
-const SUPA_URL = 'https://essscchdrgeosaqxlwfh.supabase.co';  // ← Remplacer par votre URL
+const SUPA_URL = 'https://essscchdrgeos aqxlwfh.supabase.co';  // ← Remplacer par votre URL
 const SUPA_KEY = 'sb_publishable_50EeteMVZfifrwsRy9h5-A_3avl1imu';        // ← Remplacer par votre clé anon
 
 // Cache local (les fonctions de rendu restent synchrones)
@@ -1411,11 +1411,15 @@ const DB = {
     if(i>=0) CACHE.eleves[i]={...CACHE.eleves[i],...el};
   },
 
-  // Sauvegarde tous les élèves (upsert)
+  // Sauvegarde tous les élèves (upsert — insert ou update)
   async saveAllEleves(eleves){
-    const rows=eleves.map((el,i)=>({id:el.id,nom:el.nom,prenom:el.prenom,classe:el.classe,ordre:i}));
-    await supaFetch('eleves', 'POST', rows, {'Prefer':'resolution=merge-duplicates'});
-    CACHE.eleves=eleves.map((el,i)=>({...el,ordre:i}));
+    const rows=eleves.map((el,i)=>({
+      id:el.id, nom:el.nom||'', prenom:el.prenom||'', classe:el.classe||'', ordre:i
+    }));
+    await supaFetch('eleves', 'POST', rows, {
+      'Prefer':'resolution=merge-duplicates,return=representation'
+    });
+    CACHE.eleves=eleves.map((el,i)=>({...el, ordre:i}));
   },
 
   // Sauvegarde un TP
@@ -1626,7 +1630,9 @@ async function setupParseAndGo(){
       const newRows=Array.from({length:30},(_,i)=>({
         id:uuid(), nom:'', prenom:'', classe:'', ordre:i
       }));
-      await supaFetch('eleves','POST',newRows);
+      await supaFetch('eleves', 'POST', newRows, {
+        'Prefer':'resolution=merge-duplicates,return=representation'
+      });
       CACHE.eleves=newRows.map(r=>({id:r.id,nom:'',prenom:'',classe:''}));
       existing=CACHE.eleves;
     }
@@ -1675,7 +1681,9 @@ async function skipSetup(){
       const newRows=Array.from({length:30},(_,i)=>({
         id:uuid(), nom:'', prenom:'', classe:'', ordre:i
       }));
-      await supaFetch('eleves','POST',newRows);
+      await supaFetch('eleves', 'POST', newRows, {
+        'Prefer':'resolution=merge-duplicates,return=representation'
+      });
       CACHE.eleves=newRows.map(r=>({id:r.id,nom:'',prenom:'',classe:''}));
     }
     renderDash();
@@ -3064,7 +3072,7 @@ function showConfigError(msg=''){
          border-left:5px solid var(--red);box-shadow:var(--shadow)">
       <div style="font-size:1rem;font-weight:800;color:var(--red);margin-bottom:12px">⚙️ Configuration Supabase requise</div>
       <p style="color:var(--text2);margin-bottom:14px">Ouvrez le fichier HTML dans un éditeur de texte et renseignez vos identifiants Supabase :</p>
-      <pre style="background:var(--bg);padding:14px 16px;border-radius:var(--r-sm);font-family:var(--mono);font-size:.8rem;overflow:auto;border:1px solid var(--border)">const SUPA_URL = 'https://essscchdrgeosaqxlwfh.supabase.co';
+      <pre style="background:var(--bg);padding:14px 16px;border-radius:var(--r-sm);font-family:var(--mono);font-size:.8rem;overflow:auto;border:1px solid var(--border)">const SUPA_URL = 'https://essscchdrgeos aqxlwfh.supabase.co';
 const SUPA_KEY = 'sb_publishable_50EeteMVZfifrwsRy9h5-A_3avl1imu';</pre>
       <p style="margin-top:12px;font-size:.82rem;color:var(--text3)">Ces valeurs se trouvent dans Supabase → Settings → API.</p>
       ${msg?`<p style="color:var(--red);font-size:.8rem;margin-top:10px;font-family:var(--mono)">Erreur : ${esc(msg)}</p>`:''}
