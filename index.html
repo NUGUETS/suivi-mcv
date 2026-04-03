@@ -1347,8 +1347,8 @@ const NIVEAUX = {
 // ================================================================
 // CONFIGURATION SUPABASE — À MODIFIER OBLIGATOIREMENT
 // ================================================================
-const SUPA_URL = 'https://essscchdrgeosaqxlwfh.supabase.co';  // ← Remplacer par votre URL
-const SUPA_KEY = 'sb_publishable_50EeteMVZfifrwsRy9h5-A_3avl1imu';        // ← Remplacer par votre clé anon
+const SUPA_URL = 'https://VOTRE_ID.supabase.co';  // ← Remplacer par votre URL
+const SUPA_KEY = 'VOTRE_CLE_ANON_PUBLIQUE';        // ← Remplacer par votre clé anon
 
 // Cache local (les fonctions de rendu restent synchrones)
 let CACHE = { eleves: [], evaluations: [] };
@@ -2375,7 +2375,7 @@ function grpSlide(i, compId, val){
   $(`gnd-${i}-${compId}`).textContent=parseFloat(val).toFixed(1);
 }
 
-function grpSave(){
+async function grpSave(){
   const numTP=String($('g-num').value);
   const nomTP=($('g-nom').value||'').trim();
   const classe=$('g-classe').value;
@@ -2383,7 +2383,10 @@ function grpSave(){
   const ens=localStorage.getItem('mcv_ens')||'';
   let saved=0, skipped=0;
 
-  GRP.eleves.forEach((el,i)=>{
+  closeGroupe();
+  loading(true,'Enregistrement groupé…');
+
+  const promises=GRP.eleves.map(async (el,i)=>{
     const evsForEleve=GRP.comps.map(c=>{
       const key=`${i}-${c.compId}`;
       const nivKey=GRP.elevesNiv[key];
@@ -2397,10 +2400,7 @@ function grpSave(){
     } else skipped++;
   });
 
-  closeGroupe();
-  loading(true,'Enregistrement groupé…');
-  // Attendre que toutes les sauvegardes soient terminées
-  await Promise.resolve(); // flush UI
+  await Promise.all(promises);
   renderDash($('search').value||'');
   loading(false);
   toast(`TP${numTP} enregistré pour ${saved} élève${saved>1?'s':''}${skipped?' ('+skipped+' sans évaluation)':''}  ✓`,'ok');
