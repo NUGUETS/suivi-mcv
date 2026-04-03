@@ -2890,7 +2890,7 @@ function exportPDF(){
 // ================================================================
 // SAVE / DELETE TP
 // ================================================================
-function saveTP(){
+async function saveTP(){
   const sel=Object.keys(S.F.comp).filter(k=>S.F.comp[k]);
   if(!sel.length){ $('form-alert').innerHTML='<div class="alert alert-warn">⚠️ Sélectionnez au moins une compétence.</div>'; window.scrollTo({top:0,behavior:'smooth'}); return; }
   const missing=sel.filter(id=>!S.F.niv[id]);
