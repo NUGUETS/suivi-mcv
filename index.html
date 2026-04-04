@@ -986,6 +986,98 @@ input[type=range] { flex:1; accent-color:var(--p); cursor:pointer; height:4px }
   .modal-eleve { max-height:none; box-shadow:none }
 }
 
+/* ═══════ BANDEAU ENSEIGNANT ═══════ */
+.teacher-banner {
+  background:linear-gradient(135deg, var(--p-l), var(--white));
+  border:1.5px solid var(--p-m);
+  border-radius:var(--r);
+  padding:14px 20px;
+  margin-bottom:16px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.teacher-banner-label {
+  font-size:.75rem;
+  font-weight:800;
+  color:var(--text2);
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  white-space:nowrap;
+}
+.teacher-banner input {
+  flex:1;
+  min-width:200px;
+  padding:9px 14px;
+  border:1.5px solid var(--border);
+  border-radius:var(--r-sm);
+  font-size:.9rem;
+  font-weight:600;
+  font-family:var(--font);
+  outline:none;
+  transition:all .2s;
+  color:var(--text);
+  background:var(--white);
+}
+.teacher-banner input:focus { border-color:var(--p); box-shadow:0 0 0 3px var(--p-l) }
+.teacher-banner-hint {
+  font-size:.73rem;
+  color:var(--text3);
+  white-space:nowrap;
+}
+
+/* ═══════ THÈMES MULTI-CLASSES ═══════ */
+/* Classe 1 — Bleu (défaut) */
+body[data-groupe="1"] { --p:#2563EB; --p-d:#1D4ED8; --p-dd:#1E40AF; --p-l:#EFF6FF; --p-m:#BFDBFE; --shadow-p:0 4px 14px rgba(37,99,235,.35); }
+/* Classe 2 — Vert */
+body[data-groupe="2"] { --p:#059669; --p-d:#047857; --p-dd:#065F46; --p-l:#ECFDF5; --p-m:#A7F3D0; --shadow-p:0 4px 14px rgba(5,150,105,.35); }
+/* Classe 3 — Violet */
+body[data-groupe="3"] { --p:#7C3AED; --p-d:#6D28D9; --p-dd:#5B21B6; --p-l:#F5F3FF; --p-m:#DDD6FE; --shadow-p:0 4px 14px rgba(124,58,237,.35); }
+
+/* ═══════ CLASS SWITCHER ═══════ */
+.class-switcher {
+  display:flex; gap:6px; align-items:center;
+  background:var(--white); border-radius:var(--r);
+  padding:10px 16px; margin-bottom:20px;
+  box-shadow:var(--shadow-sm); border:1px solid var(--border);
+  flex-wrap:wrap;
+}
+.class-switcher-label {
+  font-size:.75rem; font-weight:800; color:var(--text3);
+  text-transform:uppercase; letter-spacing:.5px;
+  margin-right:4px; white-space:nowrap;
+}
+.class-tab {
+  display:flex; align-items:center; gap:7px;
+  padding:8px 16px; border-radius:var(--r-sm);
+  cursor:pointer; font-size:.83rem; font-weight:700;
+  border:1.5px solid var(--border); background:var(--white);
+  color:var(--text2); transition:all .2s var(--ease);
+  white-space:nowrap; font-family:var(--font);
+}
+.class-tab:hover { border-color:var(--border-d); background:var(--bg); color:var(--text) }
+.class-tab.active-1 { background:#EFF6FF; border-color:#2563EB; color:#2563EB }
+.class-tab.active-2 { background:#ECFDF5; border-color:#059669; color:#059669 }
+.class-tab.active-3 { background:#F5F3FF; border-color:#7C3AED; color:#7C3AED }
+.class-tab .class-dot {
+  width:9px; height:9px; border-radius:50%; flex-shrink:0;
+}
+.class-dot-1 { background:#2563EB }
+.class-dot-2 { background:#059669 }
+.class-dot-3 { background:#7C3AED }
+.class-tab-add {
+  padding:7px 13px; border-radius:var(--r-sm);
+  border:1.5px dashed var(--border-d); background:transparent;
+  color:var(--text3); cursor:pointer; font-size:.8rem; font-weight:600;
+  transition:all .2s; font-family:var(--font);
+}
+.class-tab-add:hover { border-color:var(--p); color:var(--p); background:var(--p-l) }
+.class-count {
+  font-size:.68rem; background:rgba(0,0,0,.08);
+  padding:1px 6px; border-radius:99px; font-weight:800;
+}
+
 /* ═══════ FOOTER ═══════ */
 .app-footer {
   text-align:center;
@@ -1078,6 +1170,13 @@ input[type=range] { flex:1; accent-color:var(--p); cursor:pointer; height:4px }
 <!-- ======= VUE DASHBOARD ======= -->
 <div class="view" id="view-dashboard">
   <div class="main">
+    <!-- Bandeau enseignant -->
+    <div class="teacher-banner" id="teacher-banner">
+      <span class="teacher-banner-label">👤 Enseignant</span>
+      <input type="text" id="teacher-input" placeholder="Saisissez vos nom et prénom…"
+             oninput="saveTeacher(this.value)" autocomplete="name">
+      <span class="teacher-banner-hint">Votre nom apparaîtra sur chaque TP saisi</span>
+    </div>
     <div class="toolbar">
       <div style="font-weight:800;font-size:.9rem">🎓 Mes élèves</div>
       <div class="toolbar-sep"></div>
@@ -1085,12 +1184,9 @@ input[type=range] { flex:1; accent-color:var(--p); cursor:pointer; height:4px }
       <button class="btn btn-p btn-sm" onclick="openGroupeSaisie()">👥 Saisie groupée</button>
       <button class="btn btn-g btn-sm" onclick="openImportModal()">📋 Réimporter la liste</button>
       <button class="btn btn-g btn-sm" onclick="exportData()">💾 Exporter</button>
-      <label class="btn btn-g btn-sm" style="cursor:pointer">
-        📂 Importer
-        <input type="file" accept=".json" onchange="importData(event)" style="display:none">
-      </label>
-      <button class="btn btn-r btn-sm" onclick="confirmReset()">🗑 Réinitialiser</button>
     </div>
+    <!-- Sélecteur de classe -->
+    <div class="class-switcher" id="class-switcher"></div>
     <div class="dash-top">
       <h2 id="dash-title">Tableau de bord</h2>
       <div class="search-wrap">
@@ -1153,14 +1249,15 @@ input[type=range] { flex:1; accent-color:var(--p); cursor:pointer; height:4px }
         </div>
       </div>
       <div class="form-row" style="margin-top:10px">
-        <div class="form-group" style="max-width:195px">
+        <div class="form-group" style="flex:1;min-width:160px">
           <label>Classe de réalisation</label>
           <select id="f-classe">
+            <option value="2nde MRC">2nde MRC</option>
             <option value="1ère BAC PRO MCV">1ère BAC PRO MCV</option>
             <option value="Terminale BAC PRO MCV">Terminale BAC PRO MCV</option>
           </select>
         </div>
-        <div class="form-group" style="max-width:195px">
+        <div class="form-group" style="flex:1;min-width:160px">
           <label>Contexte de réalisation</label>
           <select id="f-pfmp">
             <option value="Formation en établissement">🏫 Formation en établissement</option>
@@ -1172,18 +1269,17 @@ input[type=range] { flex:1; accent-color:var(--p); cursor:pointer; height:4px }
             <option value="PFMP 6">🏢 PFMP 6</option>
           </select>
         </div>
-        <div class="form-group" style="max-width:170px">
+        <div class="form-group" style="flex:1;min-width:160px">
           <label>Épreuve</label>
           <div class="auto-pill" id="f-ep">—</div>
         </div>
-        <div class="form-group">
+        <div class="form-group" style="flex:1;min-width:160px">
           <label>Groupe de compétences</label>
           <div class="auto-pill" id="f-gc">—</div>
         </div>
       </div>
     </div>
     <div id="mc-list"></div>
-    <div id="eval-list" style="margin-top:14px"></div>
     <div class="note-bar" id="note-bar">
       <span class="note-bar-lbl">📊 Note moyenne du TP</span>
       <span class="note-bar-val" id="note-bar-val">—</span>
@@ -1204,7 +1300,8 @@ input[type=range] { flex:1; accent-color:var(--p); cursor:pointer; height:4px }
     <label>Classe</label>
     <select id="e-classe">
       <option value="">— Sélectionner —</option>
-      <option value="1ère BAC PRO MCV">1ère BAC PRO MCV</option>
+      <option value="2nde MRC">2nde MRC</option>
+            <option value="1ère BAC PRO MCV">1ère BAC PRO MCV</option>
       <option value="Terminale BAC PRO MCV">Terminale BAC PRO MCV</option>
     </select>
     <div class="modal-actions">
@@ -1355,17 +1452,18 @@ let CACHE = { eleves: [], evaluations: [] };
 
 // Helper fetch Supabase
 async function supaFetch(endpoint, method='GET', body=null, extra={}) {
-  // Compatible avec l'ancien format (anon key) et le nouveau (sb_publishable_...)
-  const isNewKey = SUPA_KEY.startsWith('sb_publishable_') || SUPA_KEY.startsWith('sb_secret_');
   const headers = {
     'apikey':        SUPA_KEY,
     'Authorization': `Bearer ${SUPA_KEY}`,
     'Content-Type':  'application/json',
-    ...(isNewKey ? {} : { 'Prefer': method==='GET' ? '' : 'return=representation' }),
-    ...(!isNewKey && method!=='GET' ? {'Prefer':'return=representation'} : {}),
-    ...extra
   };
-  if(method !== 'GET') headers['Prefer'] = 'return=representation';
+  // Prefer par défaut pour les écritures, sauf si extra le définit déjà
+  if(method !== 'GET' && !extra['Prefer']){
+    headers['Prefer'] = 'return=representation';
+  }
+  // extra écrase les headers par défaut (permet le upsert)
+  Object.assign(headers, extra);
+
   const opts = { method, headers };
   if(body !== null) opts.body = JSON.stringify(body);
   const res = await fetch(`${SUPA_URL}/rest/v1/${endpoint}`, opts);
@@ -1388,7 +1486,8 @@ const DB = {
       supaFetch('evaluations?select=*&order=created_at.asc')
     ]);
     CACHE.eleves = (eleves||[]).map(e=>({
-      id:e.id, nom:e.nom||'', prenom:e.prenom||'', classe:e.classe||''
+      id:e.id, nom:e.nom||'', prenom:e.prenom||'', classe:e.classe||'',
+      groupe: parseInt(e.groupe)||1
     }));
     CACHE.evaluations = (evals||[]).map(e=>({
       id:e.id, eleveId:e.eleve_id, numTP:e.num_tp||'', nomTP:e.nom_tp||'',
@@ -1399,9 +1498,19 @@ const DB = {
     }));
   },
   // Lectures depuis le cache (synchrones)
-  getEleves(){ return CACHE.eleves; },
-  getEvals(){  return CACHE.evaluations; },
-  hasData(){   return CACHE.eleves.length>0; },
+  getEleves(groupe=null){
+    if(groupe===null) return CACHE.eleves;
+    return CACHE.eleves.filter(e=>e.groupe===groupe);
+  },
+  getEvals(groupe=null){
+    if(groupe===null) return CACHE.evaluations;
+    const ids=new Set(CACHE.eleves.filter(e=>e.groupe===groupe).map(e=>e.id));
+    return CACHE.evaluations.filter(e=>ids.has(e.eleveId));
+  },
+  getGroupes(){
+    return [...new Set(CACHE.eleves.map(e=>e.groupe||1))].sort();
+  },
+  hasData(){ return CACHE.eleves.length>0; },
 
   // Sauvegarde un élève (PATCH)
   async saveEleve(el){
@@ -1411,15 +1520,28 @@ const DB = {
     if(i>=0) CACHE.eleves[i]={...CACHE.eleves[i],...el};
   },
 
-  // Sauvegarde tous les élèves (upsert — insert ou update)
-  async saveAllEleves(eleves){
-    const rows=eleves.map((el,i)=>({
-      id:el.id, nom:el.nom||'', prenom:el.prenom||'', classe:el.classe||'', ordre:i
-    }));
-    await supaFetch('eleves', 'POST', rows, {
-      'Prefer':'resolution=merge-duplicates,return=representation'
+  // Sauvegarde tous les élèves d'un groupe (update individuel par PATCH)
+  async saveAllEleves(eleves, groupe=1){
+    await Promise.all(eleves.map((el, i) =>
+      supaFetch(`eleves?id=eq.${el.id}`, 'PATCH', {
+        nom: el.nom||'', prenom: el.prenom||'', classe: el.classe||'',
+        ordre: i, groupe: groupe
+      })
+    ));
+    eleves.forEach((el,i)=>{
+      const idx=CACHE.eleves.findIndex(e=>e.id===el.id);
+      if(idx>=0) CACHE.eleves[idx]={...CACHE.eleves[idx],...el,groupe,ordre:i};
     });
-    CACHE.eleves=eleves.map((el,i)=>({...el, ordre:i}));
+  },
+
+  // Crée 30 nouvelles lignes pour un groupe
+  async createGroupe(groupe){
+    const rows=Array.from({length:30},(_,i)=>({
+      id:uuid(), nom:'', prenom:'', classe:'', ordre:i, groupe
+    }));
+    await supaFetch('eleves','POST',rows);
+    rows.forEach(r=>CACHE.eleves.push({id:r.id,nom:'',prenom:'',classe:'',groupe}));
+    return rows;
   },
 
   // Sauvegarde un TP
@@ -1474,6 +1596,7 @@ const DB = {
 let S = {
   view:'setup', eleve:null, epreuve:null, isEdit:false,
   activeTab:'E31',
+  currentGroupe: 1,   // classe active (1, 2 ou 3)
   F:{ mc:{}, comp:{}, niv:{}, notes:{} }
 };
 
@@ -1510,26 +1633,33 @@ function showView(v){
   renderHdrActions();
 }
 
+function saveTeacher(val){
+  localStorage.setItem('mcv_ens', val.trim());
+}
+
+function getTeacher(){
+  return localStorage.getItem('mcv_ens')||'';
+}
+
+function initTeacherBanner(){
+  const input=$('teacher-input');
+  if(input) input.value=getTeacher();
+}
+
 function renderHdrActions(){
   const a=$('hdr-actions');
-  const ens=localStorage.getItem('mcv_ens')||'';
   a.innerHTML=`
-    <button onclick="syncData()" title="Synchroniser" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);
-      color:#fff;padding:6px 12px;border-radius:99px;cursor:pointer;font-size:.75rem;font-weight:600;
-      font-family:var(--font);display:flex;align-items:center;gap:5px;transition:.2s" id="sync-btn">
-      🔄 Sync
-    </button>
-    <span class="hdr-teacher">👤 <span class="hdr-teacher-name" contenteditable="true"
-      id="ens-field" title="Cliquez pour modifier" style="outline:none;cursor:text">${esc(ens)||'Votre nom'}</span></span>`;
-  setTimeout(()=>{
-    const f=$('ens-field');
-    if(f) f.addEventListener('blur',()=>{ localStorage.setItem('mcv_ens',f.textContent.trim()); });
-  },50);
+    <button onclick="syncData()" title="Synchroniser les données" style="background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.25);color:#fff;padding:6px 14px;border-radius:99px;
+      cursor:pointer;font-size:.75rem;font-weight:600;font-family:var(--font);
+      display:flex;align-items:center;gap:6px;transition:.2s" id="sync-btn">
+      🔄 Synchroniser
+    </button>`;
 }
 
 async function syncData(){
   const btn=$('sync-btn');
-  if(btn){ btn.textContent='⏳ …'; btn.disabled=true; }
+  if(btn){ btn.innerHTML='⏳ …'; btn.disabled=true; }
   try{
     await DB.loadAll();
     if(S.view==='dashboard') renderDash($('search')?.value||'');
@@ -1539,7 +1669,7 @@ async function syncData(){
     }
     toast('Données synchronisées ✓','ok');
   }catch(e){ toast('Erreur sync : '+e.message,'err'); }
-  if(btn){ btn.innerHTML='🔄 Sync'; btn.disabled=false; }
+  if(btn){ btn.innerHTML='🔄 Synchroniser'; btn.disabled=false; }
 }
 
 function goBack(){
@@ -1596,6 +1726,7 @@ function previewTableHTML(rows, tbodyId){
       <td><input type="text" id="${tbodyId}-nom-${i}"    value="${esc(r.nom)}"    placeholder="NOM"></td>
       <td><select id="${tbodyId}-classe-${i}">
         <option value="">—</option>
+        <option value="2nde MRC"           ${r.classe==='2nde MRC'?'selected':''}>2nde MRC</option>
         <option value="1ère BAC PRO MCV"      ${r.classe==='1ère BAC PRO MCV'?'selected':''}>1ère</option>
         <option value="Terminale BAC PRO MCV" ${r.classe==='Terminale BAC PRO MCV'?'selected':''}>Terminale</option>
       </select></td>
@@ -1623,18 +1754,12 @@ async function setupParseAndGo(){
   try {
     // Recharger les élèves existants depuis Supabase
     await DB.loadAll();
-    let existing=DB.getEleves();
+    let existing=DB.getEleves(1);  // toujours groupe 1 au premier setup
 
-    // Si aucun élève en base, créer 30 lignes vides
+    // Si aucun élève en base pour le groupe 1, créer 30 lignes vides
     if(!existing.length){
-      const newRows=Array.from({length:30},(_,i)=>({
-        id:uuid(), nom:'', prenom:'', classe:'', ordre:i
-      }));
-      await supaFetch('eleves', 'POST', newRows, {
-        'Prefer':'resolution=merge-duplicates,return=representation'
-      });
-      CACHE.eleves=newRows.map(r=>({id:r.id,nom:'',prenom:'',classe:''}));
-      existing=CACHE.eleves;
+      const created = await DB.createGroupe(1);
+      existing = DB.getEleves(1);
     }
 
     const rows=buildPreviewRows(parsed,existing);
@@ -1660,7 +1785,7 @@ async function spConfirm(){
   const eleves=ids.map((id,i)=>({id,nom:rows[i].nom,prenom:rows[i].prenom,classe:rows[i].classe}));
   loading(true,'Enregistrement des élèves…');
   try {
-    await DB.saveAllEleves(eleves);
+    await DB.saveAllEleves(eleves, 1);
     closeSetupPreview();
     toast(`${rows.filter(r=>r.nom||r.prenom).length} élèves enregistrés ✓`,'ok');
     renderDash();
@@ -1676,15 +1801,9 @@ async function skipSetup(){
   loading(true,'Initialisation…');
   try {
     await DB.loadAll();
-    let existing=DB.getEleves();
+    let existing=DB.getEleves(1);
     if(!existing.length){
-      const newRows=Array.from({length:30},(_,i)=>({
-        id:uuid(), nom:'', prenom:'', classe:'', ordre:i
-      }));
-      await supaFetch('eleves', 'POST', newRows, {
-        'Prefer':'resolution=merge-duplicates,return=representation'
-      });
-      CACHE.eleves=newRows.map(r=>({id:r.id,nom:'',prenom:'',classe:''}));
+      await DB.createGroupe(1);
     }
     renderDash();
     showView('dashboard');
@@ -1696,37 +1815,102 @@ async function skipSetup(){
 }
 
 // ================================================================
+// SÉLECTEUR DE CLASSE
+// ================================================================
+function getClasseNames(){
+  try{ return JSON.parse(localStorage.getItem('mcv_classe_names')||'{}'); }catch(e){ return {}; }
+}
+function saveClasseNames(names){ localStorage.setItem('mcv_classe_names',JSON.stringify(names)); }
+function getClasseName(g){
+  const names=getClasseNames();
+  return names[g]||('Classe '+g);
+}
+
+let _renameGroupe=1;
+function openRename(g){
+  _renameGroupe=g;
+  $('rename-title').textContent='✏️ Renommer '+getClasseName(g);
+  $('rename-input').value=getClasseNames()[g]||'';
+  $('rename-input').placeholder='Ex : Term. MCVA, 1ère MCVB…';
+  $('modal-rename').classList.add('on');
+  setTimeout(()=>$('rename-input').focus(),100);
+}
+function closeRename(){ $('modal-rename').classList.remove('on'); }
+function confirmRename(){
+  const val=$('rename-input').value.trim();
+  const names=getClasseNames();
+  if(val) names[_renameGroupe]=val;
+  else delete names[_renameGroupe];
+  saveClasseNames(names);
+  closeRename();
+  toast('Classe renommée ✓','ok');
+  renderDash($('search')?.value||'');
+}
+
+function renderClassSwitcher(){
+  const groupes=DB.getGroupes();
+  const sw=$('class-switcher');
+  if(!sw) return;
+  let html=`<span class="class-switcher-label">📚 Mes classes</span>`;
+  groupes.forEach(g=>{
+    const count=DB.getEleves(g).filter(el=>(el.nom||'').trim()||(el.prenom||'').trim()).length;
+    const isActive=g===S.currentGroupe;
+    const name=getClasseName(g);
+    html+=`<button class="class-tab ${isActive?'active-'+g:''}" onclick="switchGroupe(${g})">
+      <span class="class-dot class-dot-${g}"></span>${esc(name)}
+      <span class="class-count">${count}</span>
+    </button>
+    <button title="Renommer ${esc(name)}" onclick="openRename(${g})"
+      style="background:none;border:none;cursor:pointer;font-size:.8rem;color:var(--text3);
+             padding:4px 5px;border-radius:4px;transition:.15s;line-height:1"
+      onmouseover="this.style.color='var(--p)'" onmouseout="this.style.color='var(--text3)'">✏️</button>`;
+  });
+  if(groupes.length<3){
+    const next=Math.max(...groupes,0)+1;
+    html+=`<button class="class-tab-add" onclick="addGroupe(${next})">+ Ajouter une classe</button>`;
+  }
+  sw.innerHTML=html;
+  document.body.setAttribute('data-groupe',String(S.currentGroupe));
+}
+
+function switchGroupe(g){
+  S.currentGroupe=g;
+  document.body.setAttribute('data-groupe',String(g));
+  renderDash($('search')?.value||'');
+}
+
+async function addGroupe(g){
+  if(g>3){toast('Maximum 3 classes','err');return;}
+  loading(true,'Création de la classe '+g+'…');
+  try{
+    await DB.createGroupe(g);
+    S.currentGroupe=g;
+    document.body.setAttribute('data-groupe',String(g));
+    renderDash();
+    toast('Classe '+g+' créée — collez la liste via 📋 Réimporter la liste','ok');
+    setTimeout(()=>openImportModal(),600);
+  }catch(e){toast('Erreur : '+e.message,'err');}
+  loading(false);
+}
+
+// ================================================================
 // DASHBOARD
 // ================================================================
 function renderDash(filter=''){
-  const eleves=DB.getEleves();
-  const evals=DB.getEvals();
+  renderClassSwitcher();
+  const g=S.currentGroupe;
+  const eleves=DB.getEleves(g);
+  const evals=DB.getEvals(g);
   const q=filter.toLowerCase().trim();
-  // Exclure les cases sans nom ni prénom
   const namedEleves=eleves.filter(el=>(el.nom||'').trim()||(el.prenom||'').trim());
-  const emptyCount=eleves.length-namedEleves.length;
   const list=namedEleves.filter(el=>!q||lbl(el).toLowerCase().includes(q));
   const grid=$('dash-grid');
-  $('dash-title').textContent=`🎓 ${namedEleves.length} élève${namedEleves.length>1?'s':''}`;
-
-  // Afficher/masquer le bouton "Supprimer cases vides"
-  let delBtn=$('del-empty-btn');
-  if(emptyCount>0){
-    if(!delBtn){
-      const toolbar=document.querySelector('.toolbar');
-      const btn=document.createElement('button');
-      btn.id='del-empty-btn';
-      btn.className='btn btn-r btn-sm';
-      btn.textContent=`🧹 Supprimer ${emptyCount} case${emptyCount>1?'s':''} vide${emptyCount>1?'s':''}`;
-      btn.onclick=deleteEmptySlots;
-      toolbar.insertBefore(btn,toolbar.querySelector('.toolbar-sep').nextSibling);
-    } else {
-      delBtn.textContent=`🧹 Supprimer ${emptyCount} case${emptyCount>1?'s':''} vide${emptyCount>1?'s':''}`;
-    }
-  } else if(delBtn){ delBtn.remove(); }
+  $('dash-title').textContent=`🎓 ${namedEleves.length} élève${namedEleves.length!==1?'s':''}`;
 
   if(!list.length){
-    grid.innerHTML=`<div class="alert alert-info" style="grid-column:1/-1">${q?'Aucun élève trouvé.':'Aucun élève avec un nom renseigné.'}</div>`;
+    grid.innerHTML=`<div class="alert alert-info" style="grid-column:1/-1">
+      ${q?'Aucun élève trouvé.':'Aucun élève avec un nom renseigné. Utilisez <strong>📋 Réimporter la liste</strong>.'}
+    </div>`;
     return;
   }
 
@@ -1836,15 +2020,19 @@ function renderTPPane(ep){
     const classe=rows[0]?.classe||'';
     const pfmp=rows[0]?.pfmp||'';
     const nomTP=rows[0]?.nomTP||'';
+    const enseignant=rows[0]?.enseignant||'';
     const n=rows.length;
     const pfmpBadge=pfmp?`<span class="pfmp-badge ${pfmp.startsWith('PFMP')?'':'pfmp-etab'}">${pfmp}</span>`:'';
     const nomLabel=nomTP?`<span style="font-weight:700;color:var(--text)">${esc(nomTP)}</span> — `:'';
+    const ensBadge=enseignant?`<span style="background:var(--bg);color:var(--text2);font-size:.68rem;
+      padding:1px 8px;border-radius:99px;border:1px solid var(--border);font-weight:600">
+      👤 ${esc(enseignant)}</span>`:'';
     return `<div class="tp-row ${isV?'e32':''}">
       <div class="tp-num">TP${numTP}</div>
       <div class="tp-body">
         <div class="tp-title">${nomLabel}${esc(mcs||'—')}</div>
         <div class="tp-meta" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          ${pfmpBadge}
+          ${pfmpBadge}${ensBadge}
           <span>${esc(classe)} · ${n} compétence${n>1?'s':''} · ${esc(date)}</span>
         </div>
       </div>
@@ -1940,7 +2128,7 @@ function goToForm(ep, editNum=null){
   const clsSel=$('f-classe');
   if(S.eleve&&S.eleve.classe) clsSel.value=S.eleve.classe;
 
-  // Méta-compétences
+  // Méta-compétences avec blocs d'évaluation intégrés
   $('mc-list').innerHTML=ref.mcs.map(mc=>`
     <div class="mc-section">
       <div class="mc-hdr" id="mch-${mc.id}" onclick="toggleMC('${mc.id}')">
@@ -1956,28 +2144,26 @@ function goToForm(ep, editNum=null){
             <input type="checkbox" class="comp-cb${isV?' v':''}" id="cb-${c.id}"
                    onclick="event.stopPropagation()" onchange="onCompCheck('${mc.id}','${c.id}',this.checked)">
             <span class="comp-txt">${esc(c.txt)}</span>
+          </div>
+          <div class="eval-block" id="eb-${c.id}">
+            <div class="eval-name${isV?' v':''}">🎯 ${esc(c.txt)}</div>
+            <div class="eval-inner">
+              <div class="niv-label" style="color:var(--text2)">
+                Sélectionnez le niveau de maîtrise de l'élève :
+              </div>
+              <div class="niv-grid">
+                ${Object.entries(NIVEAUX).map(([k,n])=>`
+                  <button class="niv-btn ${n.cls}" id="nb-${c.id}-${k}"
+                          onclick="selNiv('${c.id}','${k}')">${n.lbl}</button>`).join('')}
+              </div>
+              <div class="slider-row" id="sr-${c.id}">
+                <span class="range-lbl" id="rl-${c.id}">0—5</span>
+                <input type="range" id="rng-${c.id}" min="0" max="5" step="0.5" value="2.5"
+                       oninput="onSlide('${c.id}',this.value)">
+                <div class="note-disp${isV?' v':''}" id="nd-${c.id}">2.5</div>
+              </div>
+            </div>
           </div>`).join('')}
-      </div>
-    </div>`).join('');
-
-  // Blocs évaluation
-  const allComps=ref.mcs.flatMap(m=>m.comps);
-  $('eval-list').innerHTML=allComps.map(c=>`
-    <div class="eval-block" id="eb-${c.id}">
-      <div class="eval-name${isV?' v':''}">🎯 ${esc(c.txt)}</div>
-      <div class="eval-inner">
-        <div class="niv-label">Niveau de maîtrise</div>
-        <div class="niv-grid">
-          ${Object.entries(NIVEAUX).map(([k,n])=>`
-            <button class="niv-btn ${n.cls}" id="nb-${c.id}-${k}"
-                    onclick="selNiv('${c.id}','${k}')">${n.lbl}</button>`).join('')}
-        </div>
-        <div class="slider-row" id="sr-${c.id}">
-          <span class="range-lbl" id="rl-${c.id}">0—5</span>
-          <input type="range" id="rng-${c.id}" min="0" max="5" step="0.5" value="2.5"
-                 oninput="onSlide('${c.id}',this.value)">
-          <div class="note-disp${isV?' v':''}" id="nd-${c.id}">2.5</div>
-        </div>
       </div>
     </div>`).join('');
 
@@ -2000,12 +2186,22 @@ function toggleMC(id){
 
 function onMCCheck(id,checked){
   S.F.mc[id]=checked;
-  if(!checked){
+  // Ouvrir/fermer automatiquement le corps de la méta-compétence
+  const body=$('mcb-'+id);
+  const arrow=$('arr-'+id);
+  const hdr=$('mch-'+id);
+  const isV=S.epreuve==='E32';
+  if(checked){
+    body.classList.add('open');
+    if(arrow) arrow.textContent='▲';
+    hdr.classList.add('checked');
+    if(isV) hdr.classList.add('v');
+  } else {
+    body.classList.remove('open');
+    if(arrow) arrow.textContent='▼';
+    hdr.classList.remove('checked','v');
     const mc=REF[S.epreuve].mcs.find(m=>m.id===id);
     mc?.comps.forEach(c=>uncheckComp(c.id));
-    $('mcb-'+id).classList.remove('open');
-    $('arr-'+id).textContent='▼';
-    $('mch-'+id).classList.remove('checked','v');
   }
 }
 
@@ -2127,7 +2323,7 @@ function renderProfilAlert(evals){
 // ================================================================
 // P5 — GRAPHIQUE DE PROGRESSION PAR ÉLÈVE
 // ================================================================
-let CHART_TYPE = 'line'; // 'line' | 'bar'
+let CHART_TYPE = 'line'; // 'line' | 'bar' | 'radar'
 
 function renderGraph(){
   const el=S.eleve;
@@ -2152,124 +2348,190 @@ function renderGraph(){
     return;
   }
 
-  const W=720, H=280, PAD={t:20,r:24,b:50,l:48};
-  const cW=W-PAD.l-PAD.r, cH=H-PAD.t-PAD.b;
-  const allTPs=uniq(allSeries.map(p=>p.tp)).sort((a,b)=>parseInt(a.replace('TP',''))-parseInt(b.replace('TP','')));
+  // Boutons de sélection du type
+  const toggleHTML=`
+    <div style="display:flex;gap:6px;margin-left:auto;flex-wrap:wrap">
+      ${['line','bar','radar'].map(t=>{
+        const labels={line:'↗ Linéaire',bar:'▮▮ Bâtons',radar:'⬡ Araignée'};
+        const active=CHART_TYPE===t;
+        return `<button onclick="CHART_TYPE='${t}';renderGraph()"
+          style="padding:4px 12px;border-radius:4px;border:1.5px solid var(--p);font-size:.75rem;
+                 font-weight:700;cursor:pointer;font-family:var(--font);
+                 background:${active?'var(--p)':'#fff'};color:${active?'#fff':'var(--p)'}">
+          ${labels[t]}
+        </button>`;
+      }).join('')}
+    </div>`;
 
-  function yPos(n){ return PAD.t+cH-(n/20)*cH; }
+  let svgContent='';
+  let svgViewBox='';
+  let legendExtra='';
 
-  // ---- GRILLES & FONDS (communs aux deux types) ----
-  let svgInner='';
-  const zones=[{min:15,max:20,c:'#e0f2fe'},{min:10,max:15,c:'#def7ec'},{min:5,max:10,c:'#fef3c7'},{min:0,max:5,c:'#fde8e8'}];
-  zones.forEach(z=>{
-    svgInner+=`<rect x="${PAD.l}" y="${yPos(z.max)}" width="${cW}" height="${yPos(z.min)-yPos(z.max)}" fill="${z.c}" opacity="0.35"/>`;
-  });
-  [0,5,10,15,20].forEach(v=>{
-    const y=yPos(v);
-    svgInner+=`<line x1="${PAD.l}" y1="${y}" x2="${W-PAD.r}" y2="${y}" stroke="#e5e7eb" stroke-width="1"/>
-      <text x="${PAD.l-6}" y="${y+4}" text-anchor="end" font-size="10" fill="#9ca3af">${v}</text>`;
-  });
-  // Ligne seuil 10
-  svgInner+=`<line x1="${PAD.l}" y1="${yPos(10)}" x2="${W-PAD.r}" y2="${yPos(10)}" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+  // ════════════════════════════════════════
+  // GRAPHIQUE LINÉAIRE
+  // ════════════════════════════════════════
+  if(CHART_TYPE==='line'||CHART_TYPE==='bar'){
+    const W=720, H=280, PAD={t:20,r:24,b:50,l:48};
+    const cW=W-PAD.l-PAD.r, cH=H-PAD.t-PAD.b;
+    const allTPs=uniq(allSeries.map(p=>p.tp)).sort((a,b)=>parseInt(a.replace('TP',''))-parseInt(b.replace('TP','')));
+    function yPos(n){ return PAD.t+cH-(n/20)*cH; }
+    svgViewBox=`0 0 ${W} ${H}`;
+    let svg='';
 
-  if(CHART_TYPE==='line'){
-    // ---- GRAPHIQUE LINÉAIRE ----
-    const xStep=allTPs.length>1?cW/(allTPs.length-1):cW/2;
-    function xPos(tp){ const i=allTPs.indexOf(tp); return PAD.l+(allTPs.length>1?i*xStep:cW/2); }
+    const zones=[{min:15,max:20,c:'#e0f2fe'},{min:10,max:15,c:'#def7ec'},{min:5,max:10,c:'#fef3c7'},{min:0,max:5,c:'#fde8e8'}];
+    zones.forEach(z=>{ svg+=`<rect x="${PAD.l}" y="${yPos(z.max)}" width="${cW}" height="${yPos(z.min)-yPos(z.max)}" fill="${z.c}" opacity="0.35"/>`; });
+    [0,5,10,15,20].forEach(v=>{
+      const y=yPos(v);
+      svg+=`<line x1="${PAD.l}" y1="${y}" x2="${W-PAD.r}" y2="${y}" stroke="#e5e7eb" stroke-width="1"/>
+        <text x="${PAD.l-6}" y="${y+4}" text-anchor="end" font-size="10" fill="#9ca3af">${v}</text>`;
+    });
+    svg+=`<line x1="${PAD.l}" y1="${yPos(10)}" x2="${W-PAD.r}" y2="${yPos(10)}" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4,3"/>`;
 
-    function drawLine(series, color, dash=''){
-      if(!series.length) return;
-      if(series.length>1){
-        const pts=series.map(p=>`${xPos(p.tp)},${yPos(p.note)}`).join(' ');
-        svgInner+=`<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-dasharray="${dash}" stroke-linejoin="round"/>`;
+    if(CHART_TYPE==='line'){
+      const xStep=allTPs.length>1?cW/(allTPs.length-1):cW/2;
+      function xPos(tp){ const i=allTPs.indexOf(tp); return PAD.l+(allTPs.length>1?i*xStep:cW/2); }
+      function drawLine(series,color,dash=''){
+        if(!series.length) return;
+        if(series.length>1){ const pts=series.map(p=>`${xPos(p.tp)},${yPos(p.note)}`).join(' '); svg+=`<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-dasharray="${dash}" stroke-linejoin="round"/>`; }
+        series.forEach(p=>{
+          const x=xPos(p.tp), y=yPos(p.note);
+          const isPFMP=p.pfmp&&p.pfmp.startsWith('PFMP');
+          svg+=isPFMP?`<polygon points="${x},${y-7} ${x+6},${y+4} ${x-6},${y+4}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`:`<circle cx="${x}" cy="${y}" r="5" fill="${color}" stroke="#fff" stroke-width="2"/>`;
+          svg+=`<title>${p.tp}${p.nomTP?' — '+p.nomTP:''} : ${p.note.toFixed(1)}/20${p.pfmp?' ('+p.pfmp+')':''}</title>`;
+          svg+=`<text x="${x}" y="${y-10}" text-anchor="middle" font-size="10" font-weight="700" fill="${color}">${p.note.toFixed(1)}</text>`;
+        });
       }
-      series.forEach(p=>{
-        const x=xPos(p.tp), y=yPos(p.note);
-        const isPFMP=p.pfmp&&p.pfmp.startsWith('PFMP');
-        svgInner+=isPFMP
-          ?`<polygon points="${x},${y-7} ${x+6},${y+4} ${x-6},${y+4}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`
-          :`<circle cx="${x}" cy="${y}" r="5" fill="${color}" stroke="#fff" stroke-width="2"/>`;
-        svgInner+=`<title>${p.tp}${p.nomTP?' — '+p.nomTP:''} : ${p.note.toFixed(1)}/20${p.pfmp?' ('+p.pfmp+')':''}</title>`;
-        svgInner+=`<text x="${x}" y="${y-10}" text-anchor="middle" font-size="10" font-weight="700" fill="${color}">${p.note.toFixed(1)}</text>`;
+      drawLine(s31,'#1a56db'); drawLine(s32,'#7e3af2','6,3');
+      allTPs.forEach(tp=>{ svg+=`<text x="${xPos(tp)}" y="${H-PAD.b+16}" text-anchor="middle" font-size="10" fill="#6b7280">${tp}</text>`; });
+    } else {
+      const nG=allTPs.length, gW=cW/nG, bW=Math.min(22,gW*0.35), gap=4;
+      allTPs.forEach((tp,gi)=>{
+        const gx=PAD.l+gi*gW, cx=gx+gW/2;
+        const p31=s31.find(p=>p.tp===tp);
+        if(p31){ const bh=(p31.note/20)*cH,by=PAD.t+cH-bh,bx=cx-bW-gap/2; svg+=`<rect x="${bx}" y="${by}" width="${bW}" height="${bh}" fill="#1a56db" rx="3" opacity="${p31.pfmp.startsWith('PFMP')?'.65':'1'}"/><title>E31 ${p31.tp}${p31.nomTP?' — '+p31.nomTP:''} : ${p31.note.toFixed(1)}/20</title><text x="${bx+bW/2}" y="${by-4}" text-anchor="middle" font-size="9" font-weight="700" fill="#1a56db">${p31.note.toFixed(1)}</text>`; }
+        const p32=s32.find(p=>p.tp===tp);
+        if(p32){ const bh=(p32.note/20)*cH,by=PAD.t+cH-bh,bx=cx+gap/2; svg+=`<rect x="${bx}" y="${by}" width="${bW}" height="${bh}" fill="#7e3af2" rx="3" opacity="${p32.pfmp.startsWith('PFMP')?'.65':'1'}"/><title>E32 ${p32.tp}${p32.nomTP?' — '+p32.nomTP:''} : ${p32.note.toFixed(1)}/20</title><text x="${bx+bW/2}" y="${by-4}" text-anchor="middle" font-size="9" font-weight="700" fill="#7e3af2">${p32.note.toFixed(1)}</text>`; }
+        svg+=`<text x="${cx}" y="${H-PAD.b+16}" text-anchor="middle" font-size="10" fill="#6b7280">${tp}</text>`;
       });
     }
-    drawLine(s31,'#1a56db');
-    drawLine(s32,'#7e3af2','6,3');
+    svgContent=svg;
+    legendExtra=`<div class="legend-item" style="opacity:.65"><div class="legend-dot" style="background:#888"></div> Opacité réduite = PFMP</div>`;
 
-    allTPs.forEach(tp=>{
-      svgInner+=`<text x="${xPos(tp)}" y="${H-PAD.b+16}" text-anchor="middle" font-size="10" fill="#6b7280">${tp}</text>`;
-    });
-
+  // ════════════════════════════════════════
+  // GRAPHIQUE TOILE D'ARAIGNÉE (RADAR)
+  // ════════════════════════════════════════
   } else {
-    // ---- GRAPHIQUE EN BÂTONS ----
-    const nGroups=allTPs.length;
-    const groupW=cW/nGroups;
-    const barW=Math.min(22, groupW*0.35);
-    const gap=4;
+    // Axes = toutes les méta-compétences E31 + E32
+    const axes = [
+      ...REF.E31.mcs.map(mc=>({id:mc.id, ep:'E31', label:mc.nom, shortLabel:mc.nom.length>28?mc.nom.slice(0,26)+'…':mc.nom})),
+      ...REF.E32.mcs.map(mc=>({id:mc.id, ep:'E32', label:mc.nom, shortLabel:mc.nom.length>28?mc.nom.slice(0,26)+'…':mc.nom}))
+    ];
+    const N=axes.length; // 7 axes
+    const CX=360, CY=240, R=160;
+    svgViewBox=`0 0 720 480`;
 
-    allTPs.forEach((tp,gi)=>{
-      const gx=PAD.l+gi*groupW;
-      const cx=gx+groupW/2;
+    function radarPoint(i, val, maxVal=20){
+      const angle=(2*Math.PI*i/N) - Math.PI/2;
+      const r=(val/maxVal)*R;
+      return { x: CX+r*Math.cos(angle), y: CY+r*Math.sin(angle) };
+    }
+    function radarAngle(i){ return (2*Math.PI*i/N)-Math.PI/2; }
 
-      // Bâton E31
-      const p31=s31.find(p=>p.tp===tp);
-      if(p31){
-        const bh=(p31.note/20)*cH;
-        const by=PAD.t+cH-bh;
-        const bx=cx-barW-gap/2;
-        svgInner+=`<rect x="${bx}" y="${by}" width="${barW}" height="${bh}"
-          fill="#1a56db" rx="3" opacity="${p31.pfmp.startsWith('PFMP')?'0.65':'1'}"/>`;
-        svgInner+=`<title>E31 ${p31.tp}${p31.nomTP?' — '+p31.nomTP:''} : ${p31.note.toFixed(1)}/20${p31.pfmp?' ('+p31.pfmp+')':''}</title>`;
-        svgInner+=`<text x="${bx+barW/2}" y="${by-4}" text-anchor="middle" font-size="9" font-weight="700" fill="#1a56db">${p31.note.toFixed(1)}</text>`;
-      }
+    let svg='';
 
-      // Bâton E32
-      const p32=s32.find(p=>p.tp===tp);
-      if(p32){
-        const bh=(p32.note/20)*cH;
-        const by=PAD.t+cH-bh;
-        const bx=cx+gap/2;
-        svgInner+=`<rect x="${bx}" y="${by}" width="${barW}" height="${bh}"
-          fill="#7e3af2" rx="3" opacity="${p32.pfmp.startsWith('PFMP')?'0.65':'1'}"/>`;
-        svgInner+=`<title>E32 ${p32.tp}${p32.nomTP?' — '+p32.nomTP:''} : ${p32.note.toFixed(1)}/20${p32.pfmp?' ('+p32.pfmp+')':''}</title>`;
-        svgInner+=`<text x="${bx+barW/2}" y="${by-4}" text-anchor="middle" font-size="9" font-weight="700" fill="#7e3af2">${p32.note.toFixed(1)}</text>`;
-      }
-
-      svgInner+=`<text x="${cx}" y="${H-PAD.b+16}" text-anchor="middle" font-size="10" fill="#6b7280">${tp}</text>`;
+    // Cercles de fond (niveaux)
+    const bgLevels=[{v:5,c:'#fde8e8'},{v:10,c:'#fef3c7'},{v:15,c:'#def7ec'},{v:20,c:'#e0f2fe'}];
+    bgLevels.forEach(({v,c})=>{
+      const pts=axes.map((_,i)=>{ const p=radarPoint(i,v); return `${p.x},${p.y}`; }).join(' ');
+      svg+=`<polygon points="${pts}" fill="${c}" stroke="#e5e7eb" stroke-width="1" opacity="0.7"/>`;
     });
+
+    // Lignes des axes
+    axes.forEach((_,i)=>{
+      const p=radarPoint(i,20);
+      svg+=`<line x1="${CX}" y1="${CY}" x2="${p.x}" y2="${p.y}" stroke="#e5e7eb" stroke-width="1.5"/>`;
+    });
+
+    // Étiquettes des niveaux sur l'axe vertical
+    [5,10,15,20].forEach(v=>{
+      const p=radarPoint(0,v);
+      svg+=`<text x="${p.x+5}" y="${p.y}" font-size="9" fill="#94A3B8" font-weight="600">${v}</text>`;
+    });
+
+    // Calculer les valeurs par méta-compétence
+    function mcAvg(mcId){
+      const rows=evals.filter(e=>e.metaCompId===mcId);
+      return rows.length?avg(rows.map(e=>e.note)):0;
+    }
+
+    const vals=axes.map(ax=>mcAvg(ax.id));
+    const hasAny=vals.some(v=>v>0);
+
+    // Polygone de données
+    if(hasAny){
+      const ptsFill=axes.map((_,i)=>{ const p=radarPoint(i,vals[i]); return `${p.x},${p.y}`; }).join(' ');
+      // Couleur selon classe active
+      const g=S.currentGroupe;
+      const col=g===2?'#059669':g===3?'#7C3AED':'#2563EB';
+      const colLight=g===2?'rgba(5,150,105,.15)':g===3?'rgba(124,58,237,.15)':'rgba(37,99,235,.15)';
+      svg+=`<polygon points="${ptsFill}" fill="${colLight}" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>`;
+      // Points avec tooltip
+      axes.forEach((ax,i)=>{
+        if(vals[i]>0){
+          const p=radarPoint(i,vals[i]);
+          const epCol=ax.ep==='E31'?'#2563EB':'#7C3AED';
+          svg+=`<circle cx="${p.x}" cy="${p.y}" r="5" fill="${epCol}" stroke="#fff" stroke-width="2"><title>${ax.label} : ${vals[i].toFixed(1)}/20</title></circle>`;
+          svg+=`<text x="${p.x}" y="${p.y}-12}" text-anchor="middle" font-size="9" font-weight="700" fill="${epCol}">${vals[i].toFixed(1)}</text>`;
+        }
+      });
+    } else {
+      svg+=`<text x="${CX}" y="${CY+6}" text-anchor="middle" font-size="13" fill="#94A3B8">Aucune évaluation</text>`;
+    }
+
+    // Étiquettes des axes (à l'extérieur)
+    axes.forEach((ax,i)=>{
+      const angle=radarAngle(i);
+      const labelR=R+28;
+      const lx=CX+labelR*Math.cos(angle);
+      const ly=CY+labelR*Math.sin(angle);
+      const anchor=Math.cos(angle)>0.1?'start':Math.cos(angle)<-0.1?'end':'middle';
+      const epCol=ax.ep==='E31'?'#2563EB':'#7C3AED';
+      const epLabel=ax.ep==='E31'?'E31':'E32';
+      // Étiquette courte + badge épreuve
+      const lines=ax.shortLabel.match(/.{1,22}(\s|$)/g)||[ax.shortLabel];
+      let labelSvg='';
+      lines.forEach((line,li)=>{
+        labelSvg+=`<tspan x="${lx}" dy="${li===0?0:13}" text-anchor="${anchor}">${line.trim()}</tspan>`;
+      });
+      svg+=`<text font-size="10" font-weight="600" fill="#475569" text-anchor="${anchor}" x="${lx}" y="${ly-6*(lines.length-1)}">${labelSvg}</text>`;
+      svg+=`<text x="${lx}" y="${ly+7*(lines.length)}" text-anchor="${anchor}" font-size="9" font-weight="800" fill="${epCol}">[${epLabel}]</text>`;
+    });
+
+    svgContent=svg;
+    legendExtra=`
+      <div class="legend-item"><div class="legend-dot" style="background:#2563EB"></div> Méta-compétences E31</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#7C3AED"></div> Méta-compétences E32</div>`;
   }
 
   // ---- RENDU FINAL ----
-  const toggleHTML=`
-    <div style="display:flex;gap:6px;margin-left:auto">
-      <button onclick="CHART_TYPE='line';renderGraph()"
-        style="padding:4px 12px;border-radius:4px;border:1.5px solid var(--p);font-size:.75rem;font-weight:700;cursor:pointer;
-               background:${CHART_TYPE==='line'?'var(--p)':'#fff'};color:${CHART_TYPE==='line'?'#fff':'var(--p)'}">
-        ↗ Linéaire
-      </button>
-      <button onclick="CHART_TYPE='bar';renderGraph()"
-        style="padding:4px 12px;border-radius:4px;border:1.5px solid var(--p);font-size:.75rem;font-weight:700;cursor:pointer;
-               background:${CHART_TYPE==='bar'?'var(--p)':'#fff'};color:${CHART_TYPE==='bar'?'#fff':'var(--p)'}">
-        ▮▮ Bâtons
-      </button>
-    </div>`;
-
   pane.innerHTML=`
     <div class="chart-card">
       <h4 style="display:flex;align-items:center;flex-wrap:wrap;gap:8px">
-        📊 Évolution des notes au fil des TP
+        📊 ${CHART_TYPE==='radar'?'Profil de compétences — toile d\'araignée':'Évolution des notes au fil des TP'}
         <span style="font-size:.72rem;font-weight:400;color:var(--text3)">Survolez un point pour le détail</span>
         ${toggleHTML}
       </h4>
       <div class="chart-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#1a56db"></div> E31 — Vente-conseil</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#7e3af2"></div> E32 — Suivi des ventes</div>
-        <div class="legend-item" style="opacity:.65"><div class="legend-dot" style="background:#888"></div> Opacité réduite = PFMP</div>
+        ${CHART_TYPE!=='radar'?`
+          <div class="legend-item"><div class="legend-dot" style="background:#1a56db"></div> E31 — Vente-conseil</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#7e3af2"></div> E32 — Suivi des ventes</div>`:''}
+        ${legendExtra}
       </div>
       <div style="overflow-x:auto">
-        <svg viewBox="0 0 ${W} ${H}" class="chart-svg" style="min-width:380px">${svgInner}</svg>
+        <svg viewBox="${svgViewBox}" class="chart-svg" style="min-width:${CHART_TYPE==='radar'?'380':'380'}px">${svgContent}</svg>
       </div>
     </div>
+    ${CHART_TYPE!=='radar'?`
     ${s31.length?`<div class="chart-card" style="padding:12px 18px">
       <div style="font-size:.82rem;font-weight:700;color:var(--p);margin-bottom:6px">E31 — Vente-conseil</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -2283,7 +2545,7 @@ function renderGraph(){
         ${s32.map(p=>`<span class="badge ${sc(p.note)}" style="font-family:var(--mono)" title="${p.nomTP||''}">${p.tp}${p.nomTP?' : '+p.nomTP.slice(0,20)+(p.nomTP.length>20?'…':''):''} — ${p.note.toFixed(1)}</span>`).join('')}
         ${s32.length>1?`<span class="badge" style="background:var(--violet-l);color:var(--violet)">Moy. ${avg(s32.map(p=>p.note)).toFixed(1)}/20</span>`:''}
       </div>
-    </div>`:''}`;
+    </div>`:''}`:``}`;
 }
 
 // ================================================================
@@ -2423,7 +2685,7 @@ async function grpSave(){
   const nomTP=($('g-nom').value||'').trim();
   const classe=$('g-classe').value;
   const pfmp=$('g-pfmp').value;
-  const ens=localStorage.getItem('mcv_ens')||'';
+  const ens=getTeacher();
   let saved=0, skipped=0;
 
   closeGroupe();
@@ -2444,6 +2706,9 @@ async function grpSave(){
   });
 
   await Promise.all(promises);
+  // Synchronisation automatique après enregistrement groupé
+  loading(true,'Synchronisation…');
+  await DB.loadAll();
   renderDash($('search').value||'');
   loading(false);
   toast(`TP${numTP} enregistré pour ${saved} élève${saved>1?'s':''}${skipped?' ('+skipped+' sans évaluation)':''}  ✓`,'ok');
@@ -2572,10 +2837,12 @@ function printEleveView(){
 // EXPORT PDF BILAN CLASSE
 // ================================================================
 function exportClassePDF(){
-  const eleves=DB.getEleves().filter(el=>(el.nom||'').trim()||(el.prenom||'').trim());
-  const evals=DB.getEvals();
+  const g=S.currentGroupe;
+  const nomClasse=getClasseName(g);
+  const eleves=DB.getEleves(g).filter(el=>(el.nom||'').trim()||(el.prenom||'').trim());
+  const evals=DB.getEvals(g);
   const now=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
-  const ens=localStorage.getItem('mcv_ens')||'';
+  const ens=getTeacher();
 
   // Calculs globaux
   const notedE31=eleves.filter(el=>evals.some(e=>e.eleveId===el.id&&e.epreuve==='E31'));
@@ -2703,7 +2970,7 @@ function exportClassePDF(){
   }
 
   const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
-  <title>Bilan classe MCV — E31/E32</title>
+  <title>Bilan ${esc(nomClasse)} — MCV E31/E32</title>
   <style>
     body{font-family:'Segoe UI',Arial,sans-serif;margin:0;padding:20px;color:#111;font-size:13px}
     @media print{body{padding:0}.no-print{display:none} @page{margin:12mm;size:A4 landscape}}
@@ -2719,7 +2986,7 @@ function exportClassePDF(){
   <!-- EN-TÊTE -->
   <div style="background:#1a56db;color:#fff;border-radius:8px;padding:16px 22px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
     <div>
-      <div style="font-size:16px;font-weight:800">📊 Bilan de classe — BAC PRO MCV Option A</div>
+      <div style="font-size:16px;font-weight:800">📊 Bilan — ${esc(nomClasse)} — BAC PRO MCV Option A</div>
       <div style="font-size:11px;opacity:.8;margin-top:3px">Épreuves E31 (Vente-conseil) &amp; E32 (Suivi des ventes) · ${total} élèves · Édité le ${now}${ens?' · '+esc(ens):''}</div>
     </div>
     <div style="display:flex;gap:10px">
@@ -2917,7 +3184,7 @@ async function saveTP(){
   const nomTP=($('f-nom').value||'').trim();
   const classe=$('f-classe').value;
   const pfmp=$('f-pfmp').value;
-  const ens=localStorage.getItem('mcv_ens')||'';
+  const ens=getTeacher();
 
   const evaluations=sel.map(id=>{
     const comp=allComps().find(c=>c.id===id);
@@ -2929,9 +3196,13 @@ async function saveTP(){
   loading(true,'Enregistrement…');
   await DB.saveTP({eleveId:S.eleve.id,numTP,nomTP,classe,pfmp,epreuve:ep,isEdit:S.isEdit,enseignant:ens,evaluations});
 
+  // Synchronisation automatique après enregistrement
+  loading(true,'Synchronisation…');
+  await DB.loadAll();
+
   // Rafraîchir le profil
   S.eleve=DB.getEleves().find(e=>e.id===S.eleve.id);
-  toast('TP'+numTP+' enregistré ✓','ok');
+  toast('TP'+numTP+' enregistré et synchronisé ✓','ok');
   renderProfil();
   showView('profil');
   loading(false);
@@ -2985,7 +3256,7 @@ function impPreview(){
   if(!text){toast('Collez une liste d\'élèves','err');return;}
   const parsed=parseList(text,'ifmt');
   if(!parsed.length){toast('Aucun élève reconnu','err');return;}
-  const existing=DB.getEleves();
+  const existing=DB.getEleves(S.currentGroupe);  // filtre par groupe actif
   const rows=buildPreviewRows(parsed,existing);
   window._impIds=existing.map(e=>e.id);
   $('imp-count').textContent=`${parsed.length} élève${parsed.length>1?'s':''} détecté${parsed.length>1?'s':''}`;
@@ -2998,7 +3269,7 @@ async function impConfirm(){
   const rows=collectRows('imp',ids.length);
   const eleves=ids.map((id,i)=>({id,nom:rows[i].nom,prenom:rows[i].prenom,classe:rows[i].classe}));
   loading(true,'Mise à jour…');
-  await DB.saveAllEleves(eleves);
+  await DB.saveAllEleves(eleves, S.currentGroupe);  // groupe actif
   closeImport();
   toast(`Liste mise à jour ✓`,'ok');
   loading(false);
@@ -3072,8 +3343,8 @@ function showConfigError(msg=''){
          border-left:5px solid var(--red);box-shadow:var(--shadow)">
       <div style="font-size:1rem;font-weight:800;color:var(--red);margin-bottom:12px">⚙️ Configuration Supabase requise</div>
       <p style="color:var(--text2);margin-bottom:14px">Ouvrez le fichier HTML dans un éditeur de texte et renseignez vos identifiants Supabase :</p>
-      <pre style="background:var(--bg);padding:14px 16px;border-radius:var(--r-sm);font-family:var(--mono);font-size:.8rem;overflow:auto;border:1px solid var(--border)">const SUPA_URL = 'https://VOTRE_ID.supabase.co';
-const SUPA_KEY = 'VOTRE_CLE_ANON_PUBLIQUE';</pre>
+      <pre style="background:var(--bg);padding:14px 16px;border-radius:var(--r-sm);font-family:var(--mono);font-size:.8rem;overflow:auto;border:1px solid var(--border)">const SUPA_URL = 'https://essscchdrgeosaqxlwfhsupabase.co';
+const SUPA_KEY = 'sb_publishable_50EeteMVZfifrwsRy9h5-A_3avl1imu';</pre>
       <p style="margin-top:12px;font-size:.82rem;color:var(--text3)">Ces valeurs se trouvent dans Supabase → Settings → API.</p>
       ${msg?`<p style="color:var(--red);font-size:.8rem;margin-top:10px;font-family:var(--mono)">Erreur : ${esc(msg)}</p>`:''}
     </div>`;
@@ -3082,6 +3353,7 @@ const SUPA_KEY = 'VOTRE_CLE_ANON_PUBLIQUE';</pre>
 
 window.addEventListener('DOMContentLoaded', async ()=>{
   renderHdrActions();
+  initTeacherBanner();
 
   // Vérifier la config
   if(SUPA_URL.includes('VOTRE_ID') || SUPA_KEY.includes('VOTRE_CLE')){
@@ -3142,6 +3414,7 @@ window.addEventListener('DOMContentLoaded', async ()=>{
         <div class="form-group" style="max-width:200px">
           <label>Classe de réalisation</label>
           <select id="g-classe">
+            <option value="2nde MRC">2nde MRC</option>
             <option value="1ère BAC PRO MCV">1ère BAC PRO MCV</option>
             <option value="Terminale BAC PRO MCV">Terminale BAC PRO MCV</option>
           </select>
@@ -3197,9 +3470,26 @@ window.addEventListener('DOMContentLoaded', async ()=>{
   </div>
 </div>
 
+<!-- ===== MODAL RENOMMER CLASSE ===== -->
+<div class="modal-bg" id="modal-rename" onclick="if(event.target===this)closeRename()">
+  <div class="modal modal-sm">
+    <h3 id="rename-title">✏️ Renommer la classe</h3>
+    <label>Nom de la classe</label>
+    <input type="text" id="rename-input" placeholder="Ex : Term. MCVA, 1ère MCVB…" maxlength="40">
+    <div class="modal-actions">
+      <button class="btn btn-g" onclick="closeRename()">Annuler</button>
+      <button class="btn btn-p" onclick="confirmRename()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== FOOTER ===== -->
 <footer class="app-footer">
   Suivi des compétences BAC PRO MCV Option A — E31 / E32 &nbsp;·&nbsp; Outil créé par Olivier NUGUET &nbsp;·&nbsp; Région académique Guyane
+  <br>
+  <button class="btn btn-r btn-sm" onclick="confirmReset()"
+    style="margin-top:10px;font-size:.65rem;padding:4px 12px;opacity:.6"
+    title="Effacer toutes les données">🗑 Réinitialiser toutes les données</button>
 </footer>
 
 </body>
