@@ -1,0 +1,3496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suivi Compétences — BAC PRO MCV E31/E32</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM — MCV COMPÉTENCES
+═══════════════════════════════════════════ */
+:root {
+  /* Palette principale */
+  --p:       #2563EB;
+  --p-d:     #1D4ED8;
+  --p-dd:    #1E40AF;
+  --p-l:     #EFF6FF;
+  --p-m:     #BFDBFE;
+
+  /* Violet E32 */
+  --violet:  #7C3AED;
+  --violet-d:#6D28D9;
+  --violet-l:#F5F3FF;
+  --violet-m:#DDD6FE;
+
+  /* Sémantique */
+  --red:     #DC2626; --red-l:#FEF2F2;   --red-m:#FECACA;
+  --amber:   #D97706; --amber-l:#FFFBEB; --amber-m:#FDE68A;
+  --green:   #059669; --green-l:#ECFDF5; --green-m:#A7F3D0;
+  --sky:     #0284C7; --sky-l:#F0F9FF;   --sky-m:#BAE6FD;
+  --teal:    #0D9488; --teal-l:#F0FDFA;
+
+  /* Neutres */
+  --text:    #0F172A;
+  --text2:   #475569;
+  --text3:   #94A3B8;
+  --border:  #E2E8F0;
+  --border-d:#CBD5E1;
+  --bg:      #F1F5F9;
+  --bg2:     #F8FAFC;
+  --white:   #FFFFFF;
+
+  /* Ombres raffinées */
+  --shadow-xs: 0 1px 2px rgba(15,23,42,.04);
+  --shadow-sm: 0 1px 3px rgba(15,23,42,.08), 0 1px 2px rgba(15,23,42,.04);
+  --shadow:    0 4px 6px rgba(15,23,42,.07), 0 2px 4px rgba(15,23,42,.04);
+  --shadow-md: 0 10px 15px rgba(15,23,42,.08), 0 4px 6px rgba(15,23,42,.04);
+  --shadow-lg: 0 20px 25px rgba(15,23,42,.1),  0 8px 10px rgba(15,23,42,.05);
+  --shadow-p:  0 4px 14px rgba(37,99,235,.35);
+  --shadow-v:  0 4px 14px rgba(124,58,237,.35);
+
+  /* Rayon */
+  --r:    12px;
+  --r-sm: 7px;
+  --r-xs: 4px;
+
+  /* Typographie */
+  --font: 'Inter', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+
+  /* Transitions */
+  --ease: cubic-bezier(.4,0,.2,1);
+}
+
+/* ═══════ BASE ═══════ */
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0 }
+html { scroll-behavior:smooth; -webkit-text-size-adjust:100% }
+body {
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  font-size:14.5px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar { width:5px; height:5px }
+::-webkit-scrollbar-track { background:transparent }
+::-webkit-scrollbar-thumb { background:var(--border-d); border-radius:99px }
+::-webkit-scrollbar-thumb:hover { background:var(--text3) }
+
+/* ═══════ HEADER ═══════ */
+.hdr {
+  background:linear-gradient(135deg, #1D4ED8 0%, #2563EB 50%, #3B82F6 100%);
+  color:#fff;
+  height:62px;
+  display:flex;
+  align-items:center;
+  padding:0 28px;
+  gap:16px;
+  position:sticky;
+  top:0;
+  z-index:200;
+  box-shadow: 0 1px 0 rgba(255,255,255,.12) inset,
+              0 4px 20px rgba(37,99,235,.4);
+}
+.hdr-logo {
+  font-size:.65rem;
+  font-weight:800;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.25);
+  padding:5px 11px;
+  border-radius:99px;
+  white-space:nowrap;
+  backdrop-filter:blur(4px);
+}
+.hdr-title {
+  font-size:.95rem;
+  font-weight:700;
+  flex:1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  letter-spacing:-.01em;
+}
+.hdr-sub { font-size:.7rem; opacity:.65; white-space:nowrap; letter-spacing:.01em }
+.back-btn {
+  display:none;
+  align-items:center;
+  gap:6px;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.25);
+  color:#fff;
+  padding:7px 16px;
+  border-radius:99px;
+  cursor:pointer;
+  font-size:.78rem;
+  font-weight:600;
+  transition:all .2s var(--ease);
+  white-space:nowrap;
+  font-family:var(--font);
+  backdrop-filter:blur(4px);
+}
+.back-btn:hover { background:rgba(255,255,255,.28); transform:translateX(-2px) }
+.hdr-actions { display:flex; gap:8px; align-items:center }
+.hdr-teacher { font-size:.74rem; opacity:.72; white-space:nowrap }
+.hdr-teacher-name { font-weight:700; opacity:1 }
+
+/* ═══════ TOAST ═══════ */
+.toast {
+  position:fixed;
+  bottom:28px;
+  right:28px;
+  padding:13px 20px;
+  border-radius:var(--r-sm);
+  box-shadow:var(--shadow-lg);
+  z-index:500;
+  font-size:.84rem;
+  font-weight:600;
+  transform:translateY(80px);
+  opacity:0;
+  transition:all .35s cubic-bezier(.34,1.56,.64,1);
+  max-width:340px;
+  pointer-events:none;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.toast::before { font-size:1rem; flex-shrink:0 }
+.toast.on { transform:translateY(0); opacity:1 }
+.toast.ok  { background:#064E3B; color:#ECFDF5; }
+.toast.ok::before  { content:'✓' }
+.toast.err { background:#7F1D1D; color:#FEF2F2; }
+.toast.err::before { content:'✕' }
+.toast.info { background:#1E3A5F; color:#EFF6FF; }
+.toast.info::before { content:'ℹ' }
+
+/* ═══════ LOADING ═══════ */
+.loading { display:none; position:fixed; inset:0; background:rgba(248,250,252,.8);
+            backdrop-filter:blur(4px); z-index:400; align-items:center; justify-content:center }
+.loading.on { display:flex }
+.spinner {
+  width:40px; height:40px;
+  border:3px solid var(--border);
+  border-top-color:var(--p);
+  border-radius:50%;
+  animation:spin .75s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg) } }
+
+/* ═══════ LAYOUT ═══════ */
+.main { max-width:1200px; margin:0 auto; padding:28px 20px }
+.view { display:none } .view.on { display:block }
+
+/* ═══════ BOUTONS ═══════ */
+.btn {
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:9px 18px;
+  border-radius:var(--r-sm);
+  border:none;
+  cursor:pointer;
+  font-size:.83rem;
+  font-weight:600;
+  transition:all .18s var(--ease);
+  font-family:var(--font);
+  white-space:nowrap;
+  letter-spacing:.01em;
+}
+.btn-p {
+  background:var(--p);
+  color:#fff;
+  box-shadow:0 1px 3px rgba(37,99,235,.3), 0 0 0 1px rgba(37,99,235,.15);
+}
+.btn-p:hover { background:var(--p-d); box-shadow:var(--shadow-p); transform:translateY(-1px) }
+.btn-p:active { transform:translateY(0); box-shadow:none }
+
+.btn-o {
+  background:var(--white);
+  color:var(--p);
+  border:1.5px solid var(--p-m);
+  box-shadow:var(--shadow-xs);
+}
+.btn-o:hover { background:var(--p-l); border-color:var(--p) }
+
+.btn-v {
+  background:var(--violet);
+  color:#fff;
+  box-shadow:0 1px 3px rgba(124,58,237,.3);
+}
+.btn-v:hover { background:var(--violet-d); box-shadow:var(--shadow-v); transform:translateY(-1px) }
+
+.btn-ov {
+  background:var(--white);
+  color:var(--violet);
+  border:1.5px solid var(--violet-m);
+  box-shadow:var(--shadow-xs);
+}
+.btn-ov:hover { background:var(--violet-l); border-color:var(--violet) }
+
+.btn-g {
+  background:var(--white);
+  color:var(--text2);
+  border:1.5px solid var(--border);
+  box-shadow:var(--shadow-xs);
+}
+.btn-g:hover { background:var(--bg2); border-color:var(--border-d); color:var(--text) }
+
+.btn-r { background:var(--red); color:#fff }
+.btn-r:hover { background:#B91C1C; transform:translateY(-1px) }
+
+.btn-sm { padding:5px 12px; font-size:.76rem }
+.btn-xs { padding:3px 9px; font-size:.72rem }
+
+/* ═══════ BADGES ═══════ */
+.badge {
+  display:inline-flex;
+  align-items:center;
+  padding:3px 10px;
+  border-radius:99px;
+  font-size:.73rem;
+  font-weight:700;
+  gap:4px;
+  letter-spacing:.01em;
+}
+.badge-e31 { background:var(--p-l); color:var(--p); border:1px solid var(--p-m) }
+.badge-e32 { background:var(--violet-l); color:var(--violet); border:1px solid var(--violet-m) }
+
+/* ═══════ SCORE COLORS ═══════ */
+.sc0 { background:var(--red-l);   color:var(--red);   border:1px solid var(--red-m) }
+.sc1 { background:var(--amber-l); color:var(--amber); border:1px solid var(--amber-m) }
+.sc2 { background:var(--green-l); color:var(--green); border:1px solid var(--green-m) }
+.sc3 { background:var(--sky-l);   color:var(--sky);   border:1px solid var(--sky-m) }
+
+/* ═══════ SETUP SCREEN ═══════ */
+.setup-card {
+  max-width:700px;
+  margin:48px auto;
+  background:var(--white);
+  border-radius:20px;
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  border:1px solid var(--border);
+}
+.setup-banner {
+  background:linear-gradient(135deg, #1D4ED8, #4F46E5);
+  padding:36px 40px;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+.setup-banner::after {
+  content:'';
+  position:absolute;
+  right:-40px; bottom:-40px;
+  width:200px; height:200px;
+  border-radius:50%;
+  background:rgba(255,255,255,.06);
+}
+.setup-banner h1 { font-size:1.45rem; font-weight:800; margin-bottom:7px; letter-spacing:-.02em }
+.setup-banner p { opacity:.75; font-size:.88rem; max-width:440px; line-height:1.6 }
+.setup-body { padding:32px 40px }
+.setup-step { display:flex; gap:14px; align-items:flex-start; margin-bottom:22px }
+.setup-num {
+  width:30px; height:30px;
+  background:linear-gradient(135deg, var(--p), #4F46E5);
+  color:#fff;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:.78rem;
+  flex-shrink:0;
+  box-shadow:0 2px 8px rgba(37,99,235,.35);
+}
+.hint-box {
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  padding:11px 15px;
+  font-size:.81rem;
+  color:var(--text2);
+  margin:10px 0;
+  line-height:1.8;
+}
+.hint-box code {
+  background:var(--border);
+  padding:1px 6px;
+  border-radius:var(--r-xs);
+  font-family:var(--mono);
+  font-size:.78rem;
+  color:var(--text);
+}
+.paste-area {
+  width:100%; height:165px;
+  border:2px dashed var(--border-d);
+  border-radius:var(--r);
+  padding:13px 15px;
+  font-size:.83rem;
+  font-family:var(--mono);
+  resize:vertical;
+  outline:none;
+  transition:all .2s var(--ease);
+  line-height:1.7;
+  color:var(--text);
+  background:var(--bg2);
+}
+.paste-area:focus { border-color:var(--p); border-style:solid; background:var(--white); box-shadow:0 0 0 3px var(--p-l) }
+.format-radio { display:flex; gap:18px; flex-wrap:wrap; margin:12px 0 }
+.format-radio label {
+  display:flex; align-items:center; gap:7px;
+  cursor:pointer; font-size:.83rem; font-weight:500;
+  color:var(--text2); transition:color .15s;
+}
+.format-radio label:hover { color:var(--text) }
+.format-radio input { accent-color:var(--p) }
+
+/* ═══════ TOOLBAR ═══════ */
+.toolbar {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+  background:var(--white);
+  border-radius:var(--r);
+  padding:12px 16px;
+  box-shadow:var(--shadow-sm);
+  margin-bottom:22px;
+  border:1px solid var(--border);
+}
+.toolbar-sep { flex:1 }
+
+/* ═══════ DASHBOARD ═══════ */
+.dash-top {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-bottom:24px;
+}
+.dash-top h2 {
+  font-size:1.05rem;
+  font-weight:800;
+  flex:1;
+  letter-spacing:-.02em;
+  color:var(--text);
+}
+.search-wrap { position:relative; flex:1; min-width:180px; max-width:320px }
+.search-wrap input {
+  width:100%;
+  padding:9px 14px 9px 38px;
+  border:1.5px solid var(--border);
+  border-radius:var(--r-sm);
+  font-size:.85rem;
+  outline:none;
+  transition:all .2s var(--ease);
+  font-family:var(--font);
+  background:var(--white);
+  color:var(--text);
+  box-shadow:var(--shadow-xs);
+}
+.search-wrap input:focus { border-color:var(--p); box-shadow:0 0 0 3px var(--p-l) }
+.search-wrap input::placeholder { color:var(--text3) }
+.search-wrap .si { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:.9rem }
+
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px }
+.stu-card {
+  background:var(--white);
+  border-radius:var(--r);
+  box-shadow:var(--shadow-sm);
+  padding:18px 16px 14px;
+  cursor:pointer;
+  border:1.5px solid var(--border);
+  transition:all .22s var(--ease);
+  position:relative;
+  overflow:hidden;
+}
+.stu-card::after {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:3px;
+  background:linear-gradient(90deg, var(--p), #4F46E5);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .25s var(--ease);
+  border-radius:var(--r) var(--r) 0 0;
+}
+.stu-card:hover {
+  border-color:var(--p-m);
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-md);
+}
+.stu-card:hover::after { transform:scaleX(1) }
+.stu-num {
+  position:absolute;
+  top:11px; right:11px;
+  background:var(--bg);
+  color:var(--text3);
+  font-size:.66rem;
+  font-weight:700;
+  padding:2px 7px;
+  border-radius:99px;
+  font-family:var(--mono);
+  border:1px solid var(--border);
+}
+.stu-name {
+  font-weight:700;
+  font-size:.9rem;
+  color:var(--p);
+  margin-bottom:3px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  padding-right:36px;
+  letter-spacing:-.01em;
+}
+.stu-class { font-size:.7rem; color:var(--text3); margin-bottom:12px; font-weight:500 }
+.stu-stats { display:flex; gap:5px; flex-wrap:wrap }
+.stu-stat { font-size:.7rem; padding:2px 9px; border-radius:99px; font-weight:700; font-family:var(--mono) }
+
+/* ═══════ PROFIL ═══════ */
+.profil-hdr {
+  background:var(--white);
+  border-radius:var(--r);
+  box-shadow:var(--shadow-sm);
+  padding:22px 26px;
+  margin-bottom:18px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  flex-wrap:wrap;
+  border:1px solid var(--border);
+}
+.profil-avatar {
+  width:56px; height:56px;
+  background:linear-gradient(135deg, var(--p), #4F46E5);
+  border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:1.25rem; color:#fff;
+  flex-shrink:0;
+  box-shadow:0 4px 12px rgba(37,99,235,.35);
+  letter-spacing:-.03em;
+}
+.profil-info { flex:1 }
+.profil-name { font-size:1.2rem; font-weight:800; color:var(--text); letter-spacing:-.02em }
+.profil-class { font-size:.78rem; color:var(--text3); margin-top:3px; font-weight:500 }
+
+.stats-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:12px; margin-bottom:20px }
+.stat-box {
+  background:var(--white);
+  border-radius:var(--r-sm);
+  box-shadow:var(--shadow-xs);
+  padding:14px 12px;
+  text-align:center;
+  border:1px solid var(--border);
+  transition:box-shadow .2s;
+}
+.stat-box:hover { box-shadow:var(--shadow) }
+.stat-val { font-size:1.65rem; font-weight:800; font-family:var(--mono); letter-spacing:-.03em }
+.stat-lbl {
+  font-size:.67rem;
+  color:var(--text3);
+  margin-top:3px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+
+/* ═══════ TABS ═══════ */
+.tabs {
+  display:flex;
+  gap:4px;
+  margin-bottom:20px;
+  background:var(--white);
+  padding:5px;
+  border-radius:var(--r-sm);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-xs);
+  flex-wrap:wrap;
+}
+.tab {
+  padding:8px 18px;
+  cursor:pointer;
+  font-weight:600;
+  color:var(--text2);
+  border-radius:5px;
+  transition:all .18s var(--ease);
+  font-size:.82rem;
+  border:none;
+  background:transparent;
+  white-space:nowrap;
+}
+.tab:hover { color:var(--text); background:var(--bg) }
+.tab.on { color:var(--p); background:var(--p-l); font-weight:700; box-shadow:var(--shadow-xs) }
+.tab-pane { display:none } .tab-pane.on { display:block }
+.add-btns { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px }
+
+/* ═══════ TP CARDS ═══════ */
+.tp-list { display:flex; flex-direction:column; gap:10px }
+.tp-row {
+  background:var(--white);
+  border-radius:var(--r);
+  box-shadow:var(--shadow-xs);
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+  border:1.5px solid var(--border);
+  border-left:4px solid var(--p);
+  transition:all .2s var(--ease);
+}
+.tp-row.e32 { border-left-color:var(--violet) }
+.tp-row:hover { box-shadow:var(--shadow); border-color:var(--p-m); transform:translateX(2px) }
+.tp-row.e32:hover { border-color:var(--violet-m) }
+
+.tp-num {
+  background:linear-gradient(135deg, var(--p), #4F46E5);
+  color:#fff;
+  border-radius:var(--r-xs);
+  padding:5px 11px;
+  font-weight:800;
+  font-size:.82rem;
+  min-width:48px;
+  text-align:center;
+  flex-shrink:0;
+  font-family:var(--mono);
+  box-shadow:0 2px 6px rgba(37,99,235,.3);
+  letter-spacing:.02em;
+}
+.tp-row.e32 .tp-num {
+  background:linear-gradient(135deg, var(--violet), #6D28D9);
+  box-shadow:0 2px 6px rgba(124,58,237,.3);
+}
+.tp-body { flex:1; min-width:140px }
+.tp-title { font-weight:700; font-size:.86rem; color:var(--text); letter-spacing:-.01em }
+.tp-meta { font-size:.73rem; color:var(--text3); margin-top:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap }
+.tp-score {
+  font-size:1rem;
+  font-weight:800;
+  padding:5px 14px;
+  border-radius:99px;
+  flex-shrink:0;
+  font-family:var(--mono);
+  letter-spacing:-.02em;
+}
+.tp-actions { display:flex; gap:5px; flex-shrink:0 }
+.empty-state { text-align:center; padding:52px 20px; color:var(--text3) }
+.empty-state .ico { font-size:2.8rem; margin-bottom:14px; display:block }
+
+/* ═══════ FORMULAIRE TP ═══════ */
+.form-card {
+  background:var(--white);
+  border-radius:var(--r);
+  box-shadow:var(--shadow-sm);
+  padding:22px 26px;
+  margin-bottom:16px;
+  border:1px solid var(--border);
+}
+.form-card h3 {
+  font-size:.92rem;
+  font-weight:800;
+  margin-bottom:16px;
+  padding-bottom:12px;
+  border-bottom:1.5px solid var(--border);
+  color:var(--text);
+  letter-spacing:-.01em;
+}
+.form-row { display:flex; gap:14px; flex-wrap:wrap }
+.form-group { flex:1; min-width:150px }
+.form-group label {
+  display:block;
+  font-size:.7rem;
+  font-weight:700;
+  color:var(--text2);
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  margin-bottom:6px;
+}
+.form-group select, .form-group input[type=text] {
+  width:100%;
+  padding:9px 12px;
+  border:1.5px solid var(--border);
+  border-radius:var(--r-sm);
+  font-size:.85rem;
+  outline:none;
+  background:var(--white);
+  transition:all .2s var(--ease);
+  font-family:var(--font);
+  color:var(--text);
+  box-shadow:var(--shadow-xs);
+}
+.form-group select:hover, .form-group input[type=text]:hover { border-color:var(--border-d) }
+.form-group select:focus, .form-group input[type=text]:focus {
+  border-color:var(--p);
+  box-shadow:0 0 0 3px var(--p-l);
+}
+.auto-pill {
+  background:var(--p-l);
+  color:var(--p);
+  font-weight:700;
+  padding:9px 12px;
+  border-radius:var(--r-sm);
+  font-size:.85rem;
+  border:1.5px solid var(--p-m);
+  letter-spacing:.01em;
+}
+.auto-pill.v { background:var(--violet-l); color:var(--violet); border-color:var(--violet-m) }
+
+/* ═══════ META-COMPÉTENCES ═══════ */
+.mc-section {
+  background:var(--white);
+  border-radius:var(--r);
+  box-shadow:var(--shadow-xs);
+  margin-bottom:10px;
+  overflow:hidden;
+  border:1.5px solid var(--border);
+  transition:border-color .2s;
+}
+.mc-section:has(.mc-hdr.checked) { border-color:var(--p-m) }
+.mc-section:has(.mc-hdr.checked.v) { border-color:var(--violet-m) }
+
+.mc-hdr { display:flex; align-items:center; gap:13px; padding:14px 18px; cursor:pointer; transition:background .15s }
+.mc-hdr:hover { background:var(--bg2) }
+.mc-hdr.checked { background:var(--p-l) }
+.mc-hdr.checked.v { background:var(--violet-l) }
+
+.mc-cb { width:18px; height:18px; cursor:pointer; accent-color:var(--p); flex-shrink:0 }
+.mc-cb.v { accent-color:var(--violet) }
+.mc-lbl { font-weight:700; font-size:.86rem; flex:1; cursor:pointer; letter-spacing:-.01em }
+.mc-arrow { color:var(--text3); font-size:.75rem; transition:transform .2s; flex-shrink:0 }
+.mc-body { display:none; padding:14px 18px; background:var(--bg2); border-top:1px solid var(--border) }
+.mc-body.open { display:block }
+.mc-hint { font-size:.72rem; color:var(--text3); font-style:italic; margin-bottom:10px }
+
+/* ═══════ COMPÉTENCES ═══════ */
+.comp-item {
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:9px 12px;
+  border:1.5px solid var(--border);
+  border-radius:var(--r-sm);
+  margin-bottom:6px;
+  cursor:pointer;
+  transition:all .15s var(--ease);
+  background:var(--white);
+}
+.comp-item:hover { border-color:var(--p-m); background:var(--p-l) }
+.comp-item.on { border-color:var(--p); background:var(--p-l) }
+.comp-item.on.v { border-color:var(--violet); background:var(--violet-l) }
+.comp-cb { width:16px; height:16px; accent-color:var(--p); flex-shrink:0; margin-top:2px; cursor:pointer }
+.comp-cb.v { accent-color:var(--violet) }
+.comp-txt { font-size:.82rem; line-height:1.5; cursor:pointer; color:var(--text) }
+
+/* ═══════ ÉVALUATION (niveaux + slider) ═══════ */
+.eval-block {
+  border:1.5px solid var(--border);
+  border-radius:var(--r);
+  margin-bottom:10px;
+  overflow:hidden;
+  display:none;
+}
+.eval-block.on { display:block }
+.eval-name {
+  padding:9px 16px;
+  font-size:.78rem;
+  font-weight:700;
+  background:var(--p-l);
+  color:var(--p);
+  border-bottom:1px solid var(--p-m);
+  letter-spacing:-.01em;
+}
+.eval-name.v { background:var(--violet-l); color:var(--violet); border-bottom-color:var(--violet-m) }
+.eval-inner { padding:13px 16px; background:var(--white) }
+.niv-label { font-size:.68rem; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:.6px; margin-bottom:9px }
+.niv-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:11px }
+.niv-btn {
+  padding:9px 8px;
+  border:1.5px solid;
+  border-radius:var(--r-sm);
+  cursor:pointer;
+  font-size:.73rem;
+  font-weight:700;
+  text-align:center;
+  transition:all .15s var(--ease);
+  background:var(--white);
+  font-family:var(--font);
+  line-height:1.3;
+}
+.niv-btn.insuf { border-color:var(--red-m);  color:var(--red)   } .niv-btn.insuf.on { background:var(--red-l);   box-shadow:0 0 0 2px var(--red-m)  }
+.niv-btn.frag  { border-color:var(--amber-m); color:var(--amber) } .niv-btn.frag.on  { background:var(--amber-l); box-shadow:0 0 0 2px var(--amber-m) }
+.niv-btn.sati  { border-color:var(--green-m); color:var(--green) } .niv-btn.sati.on  { background:var(--green-l); box-shadow:0 0 0 2px var(--green-m) }
+.niv-btn.tbon  { border-color:var(--sky-m);   color:var(--sky)   } .niv-btn.tbon.on  { background:var(--sky-l);   box-shadow:0 0 0 2px var(--sky-m)   }
+.niv-btn:not(.on) { opacity:.42 }
+.slider-row { display:none; align-items:center; gap:10px; padding:4px 0 2px }
+.slider-row.on { display:flex }
+input[type=range] { flex:1; accent-color:var(--p); cursor:pointer; height:4px }
+.note-disp { min-width:52px; text-align:center; font-weight:800; font-size:1rem; color:var(--p); font-family:var(--mono) }
+.note-disp.v { color:var(--violet) }
+.range-lbl { font-size:.7rem; color:var(--text3); white-space:nowrap; font-family:var(--mono) }
+
+/* ═══════ NOTE BARRE ═══════ */
+.note-bar {
+  background:linear-gradient(135deg, var(--p-d), var(--p));
+  color:#fff;
+  border-radius:var(--r);
+  padding:14px 22px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:16px;
+  position:sticky;
+  bottom:18px;
+  box-shadow:var(--shadow-p), 0 1px 0 rgba(255,255,255,.15) inset;
+}
+.note-bar.v { background:linear-gradient(135deg, var(--violet-d), var(--violet)); box-shadow:var(--shadow-v), 0 1px 0 rgba(255,255,255,.15) inset }
+.note-bar-lbl { font-size:.82rem; font-weight:600; opacity:.85; flex:1 }
+.note-bar-val { font-size:1.55rem; font-weight:800; font-family:var(--mono); letter-spacing:-.03em }
+
+/* ═══════ PROFIL GLOBAL ═══════ */
+.cov-section { margin-bottom:24px }
+.cov-mc-title {
+  font-size:.8rem;
+  font-weight:700;
+  color:var(--text2);
+  margin-bottom:8px;
+  padding:8px 14px;
+  background:var(--bg);
+  border-radius:var(--r-sm);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border:1px solid var(--border);
+  letter-spacing:-.01em;
+}
+.cov-row { display:flex; align-items:center; gap:10px; margin-bottom:6px; padding:0 4px }
+.cov-lbl { font-size:.76rem; color:var(--text2); flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.cov-bar { width:88px; height:6px; background:var(--border); border-radius:99px; overflow:hidden; flex-shrink:0 }
+.cov-fill { height:100%; border-radius:99px }
+.cov-note { font-size:.74rem; font-weight:700; min-width:40px; text-align:right; font-family:var(--mono); flex-shrink:0 }
+
+/* ═══════ MODALES ═══════ */
+.modal-bg {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.55);
+  z-index:300;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(3px);
+  padding:16px;
+}
+.modal-bg.on { display:flex }
+.modal {
+  background:var(--white);
+  border-radius:16px;
+  padding:26px 30px;
+  width:90%;
+  box-shadow:var(--shadow-lg);
+  border:1px solid var(--border);
+}
+.modal-sm { max-width:460px }
+.modal-lg { max-width:860px; max-height:90vh; display:flex; flex-direction:column }
+.modal-body { flex:1; overflow-y:auto }
+.modal h3 { font-size:.97rem; font-weight:800; margin-bottom:18px; color:var(--p); letter-spacing:-.02em }
+.modal label {
+  display:block;
+  font-size:.68rem;
+  font-weight:700;
+  color:var(--text2);
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  margin-bottom:5px;
+  margin-top:14px;
+}
+.modal input, .modal select {
+  width:100%;
+  padding:9px 12px;
+  border:1.5px solid var(--border);
+  border-radius:var(--r-sm);
+  font-size:.88rem;
+  outline:none;
+  transition:all .2s var(--ease);
+  font-family:var(--font);
+  color:var(--text);
+  box-shadow:var(--shadow-xs);
+}
+.modal input:focus, .modal select:focus { border-color:var(--p); box-shadow:0 0 0 3px var(--p-l) }
+.modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:22px; flex-wrap:wrap }
+
+/* ═══════ PREVIEW TABLE ═══════ */
+.ptable { width:100%; border-collapse:collapse; font-size:.82rem }
+.ptable th {
+  background:linear-gradient(135deg, var(--p-d), var(--p));
+  color:#fff;
+  padding:9px 11px;
+  text-align:left;
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  font-weight:700;
+}
+.ptable td { padding:5px 7px; border-bottom:1px solid var(--border) }
+.ptable tr:nth-child(even) td { background:var(--bg2) }
+.ptable tr:hover td { background:var(--p-l) }
+.ptable input, .ptable select {
+  width:100%; border:1px solid transparent; border-radius:var(--r-xs);
+  padding:4px 7px; font-size:.81rem; background:transparent; outline:none;
+  transition:.15s; font-family:var(--font); color:var(--text);
+}
+.ptable input:focus, .ptable select:focus { border-color:var(--p); background:var(--white) }
+.ptable .rn { color:var(--text3); font-size:.7rem; text-align:center; width:26px; font-family:var(--mono) }
+.import-step { display:none } .import-step.on { display:block }
+.imp-count { font-size:.83rem; font-weight:700; color:var(--green); margin-bottom:9px }
+
+/* ═══════ ALERTES ═══════ */
+.alert {
+  padding:11px 15px;
+  border-radius:var(--r-sm);
+  font-size:.82rem;
+  margin-bottom:13px;
+  border-left:4px solid;
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+}
+.alert-info { background:var(--p-l); color:var(--p); border-color:var(--p) }
+.alert-warn { background:var(--amber-l); color:var(--amber); border-color:var(--amber) }
+.alert-ok   { background:var(--green-l); color:var(--green); border-color:var(--green) }
+
+/* ═══════ P2 : PFMP BADGE ═══════ */
+.pfmp-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:2px 9px; border-radius:99px;
+  font-size:.7rem; font-weight:700;
+  background:var(--violet-l); color:var(--violet);
+  border:1px solid var(--violet-m);
+}
+.pfmp-badge.pfmp-etab { background:var(--teal-l); color:var(--teal); border-color:#99F6E4 }
+
+/* ═══════ P3 : ALERTE COMPÉTENCES ═══════ */
+.alert-comp {
+  background:#FFF7ED;
+  border:1.5px solid #FED7AA;
+  border-radius:var(--r);
+  padding:14px 18px;
+  margin-bottom:18px;
+}
+.alert-comp-title {
+  font-size:.83rem; font-weight:800; color:#C2410C;
+  margin-bottom:10px; display:flex; align-items:center; gap:8px;
+}
+.alert-comp-list { display:flex; flex-direction:column; gap:5px }
+.alert-comp-item {
+  font-size:.77rem; color:#9A3412;
+  display:flex; align-items:flex-start; gap:7px;
+  padding:5px 8px; border-radius:var(--r-xs);
+  background:rgba(255,255,255,.55);
+}
+
+/* ═══════ P5 : GRAPHIQUE ═══════ */
+.chart-card {
+  background:var(--white);
+  border-radius:var(--r);
+  box-shadow:var(--shadow-sm);
+  padding:20px 22px;
+  margin-bottom:16px;
+  border:1px solid var(--border);
+}
+.chart-card h4 {
+  font-size:.87rem; font-weight:800; margin-bottom:14px;
+  display:flex; align-items:center; gap:8px;
+  letter-spacing:-.01em;
+}
+.chart-legend { display:flex; gap:16px; margin-bottom:12px; flex-wrap:wrap }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:.73rem; font-weight:600; color:var(--text2) }
+.legend-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0 }
+.chart-empty { text-align:center; padding:34px; color:var(--text3); font-size:.84rem }
+.chart-svg { width:100%; overflow:visible }
+
+/* ═══════ P6 : SAISIE GROUPÉE ═══════ */
+.modal-xl { max-width:1020px; max-height:92vh; display:flex; flex-direction:column }
+.grp-step { display:none } .grp-step.on { display:block }
+.grp-table { width:100%; border-collapse:collapse; font-size:.82rem }
+.grp-table th {
+  background:linear-gradient(135deg, var(--p-d), var(--p));
+  color:#fff; padding:9px 10px; font-size:.73rem;
+  text-align:left; position:sticky; top:0; z-index:2;
+  font-weight:700; letter-spacing:.02em;
+}
+.grp-table td { padding:6px 8px; border-bottom:1px solid var(--border); vertical-align:middle }
+.grp-table tr:nth-child(even) td { background:var(--bg2) }
+.grp-table .stu-col { font-weight:700; font-size:.8rem; width:160px; color:var(--text) }
+.grp-niv { display:flex; gap:4px; flex-wrap:wrap }
+.grp-niv-btn {
+  padding:4px 7px; border:1.5px solid; border-radius:var(--r-xs);
+  cursor:pointer; font-size:.68rem; font-weight:700;
+  background:var(--white); transition:.15s; font-family:var(--font);
+}
+.grp-niv-btn.insuf { border-color:var(--red-m);  color:var(--red)   } .grp-niv-btn.insuf.on { background:var(--red-l)   }
+.grp-niv-btn.frag  { border-color:var(--amber-m); color:var(--amber) } .grp-niv-btn.frag.on  { background:var(--amber-l) }
+.grp-niv-btn.sati  { border-color:var(--green-m); color:var(--green) } .grp-niv-btn.sati.on  { background:var(--green-l) }
+.grp-niv-btn.tbon  { border-color:var(--sky-m);   color:var(--sky)   } .grp-niv-btn.tbon.on  { background:var(--sky-l)   }
+.grp-niv-btn:not(.on) { opacity:.38 }
+.grp-slider-wrap { display:flex; align-items:center; gap:6px; margin-top:5px }
+.grp-slider-wrap input[type=range] { flex:1; accent-color:var(--p) }
+.grp-note-disp { font-size:.78rem; font-weight:800; color:var(--p); min-width:30px; font-family:var(--mono) }
+.grp-progress {
+  font-size:.75rem; color:var(--p); padding:7px 12px;
+  background:var(--p-l); border-radius:var(--r-sm);
+  margin-bottom:11px; border:1px solid var(--p-m); font-weight:600;
+}
+
+/* ═══════ P8 : VUE ÉLÈVE ═══════ */
+.modal-eleve {
+  max-width:680px; max-height:90vh; display:flex; flex-direction:column;
+  background:var(--white); border-radius:20px;
+}
+.eleve-view-hdr {
+  background:linear-gradient(135deg, var(--p-d), var(--p));
+  color:#fff; padding:22px 26px; border-radius:16px 16px 0 0;
+}
+.eleve-view-name { font-size:1.25rem; font-weight:800; letter-spacing:-.02em }
+.eleve-view-sub { font-size:.78rem; opacity:.75; margin-top:4px }
+.eleve-view-body { flex:1; overflow-y:auto; padding:22px 26px }
+.eleve-ep-section { margin-bottom:24px }
+.eleve-ep-title {
+  font-size:.88rem; font-weight:800; margin-bottom:13px;
+  display:flex; align-items:center; gap:8px; color:var(--p); letter-spacing:-.01em;
+}
+.eleve-ep-title.v { color:var(--violet) }
+.eleve-comp-row { display:flex; align-items:center; gap:10px; margin-bottom:8px }
+.eleve-comp-lbl { font-size:.77rem; flex:1; color:var(--text); line-height:1.45 }
+.eleve-comp-bar-wrap { width:110px; flex-shrink:0 }
+.eleve-comp-bar-bg { height:7px; background:var(--border); border-radius:99px; overflow:hidden }
+.eleve-comp-bar-fill { height:100%; border-radius:99px; transition:width .6s var(--ease) }
+.eleve-comp-note { font-size:.76rem; font-weight:800; min-width:34px; text-align:right; font-family:var(--mono); flex-shrink:0 }
+.eleve-moy-box { border-radius:var(--r-sm); padding:12px 16px; text-align:center; margin-bottom:13px; max-width:200px }
+.eleve-moy-val { font-size:1.9rem; font-weight:800; font-family:var(--mono); letter-spacing:-.03em }
+.eleve-moy-lbl { font-size:.72rem; margin-top:3px; font-weight:600 }
+.eleve-encouragement {
+  background:var(--green-l); border:1.5px solid var(--green-m);
+  border-radius:var(--r-sm); padding:13px 17px;
+  font-size:.82rem; color:#065F46;
+  margin-bottom:18px; line-height:1.65;
+}
+.print-only { display:none }
+@media print {
+  .no-print { display:none }
+  .print-only { display:block }
+  .modal-eleve { max-height:none; box-shadow:none }
+}
+
+/* ═══════ BANDEAU ENSEIGNANT ═══════ */
+.teacher-banner {
+  background:linear-gradient(135deg, var(--p-l), var(--white));
+  border:1.5px solid var(--p-m);
+  border-radius:var(--r);
+  padding:14px 20px;
+  margin-bottom:16px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.teacher-banner-label {
+  font-size:.75rem;
+  font-weight:800;
+  color:var(--text2);
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  white-space:nowrap;
+}
+.teacher-banner input {
+  flex:1;
+  min-width:200px;
+  padding:9px 14px;
+  border:1.5px solid var(--border);
+  border-radius:var(--r-sm);
+  font-size:.9rem;
+  font-weight:600;
+  font-family:var(--font);
+  outline:none;
+  transition:all .2s;
+  color:var(--text);
+  background:var(--white);
+}
+.teacher-banner input:focus { border-color:var(--p); box-shadow:0 0 0 3px var(--p-l) }
+.teacher-banner-hint {
+  font-size:.73rem;
+  color:var(--text3);
+  white-space:nowrap;
+}
+
+/* ═══════ THÈMES MULTI-CLASSES ═══════ */
+/* Classe 1 — Bleu (défaut) */
+body[data-groupe="1"] { --p:#2563EB; --p-d:#1D4ED8; --p-dd:#1E40AF; --p-l:#EFF6FF; --p-m:#BFDBFE; --shadow-p:0 4px 14px rgba(37,99,235,.35); }
+/* Classe 2 — Vert */
+body[data-groupe="2"] { --p:#059669; --p-d:#047857; --p-dd:#065F46; --p-l:#ECFDF5; --p-m:#A7F3D0; --shadow-p:0 4px 14px rgba(5,150,105,.35); }
+/* Classe 3 — Violet */
+body[data-groupe="3"] { --p:#7C3AED; --p-d:#6D28D9; --p-dd:#5B21B6; --p-l:#F5F3FF; --p-m:#DDD6FE; --shadow-p:0 4px 14px rgba(124,58,237,.35); }
+
+/* ═══════ CLASS SWITCHER ═══════ */
+.class-switcher {
+  display:flex; gap:6px; align-items:center;
+  background:var(--white); border-radius:var(--r);
+  padding:10px 16px; margin-bottom:20px;
+  box-shadow:var(--shadow-sm); border:1px solid var(--border);
+  flex-wrap:wrap;
+}
+.class-switcher-label {
+  font-size:.75rem; font-weight:800; color:var(--text3);
+  text-transform:uppercase; letter-spacing:.5px;
+  margin-right:4px; white-space:nowrap;
+}
+.class-tab {
+  display:flex; align-items:center; gap:7px;
+  padding:8px 16px; border-radius:var(--r-sm);
+  cursor:pointer; font-size:.83rem; font-weight:700;
+  border:1.5px solid var(--border); background:var(--white);
+  color:var(--text2); transition:all .2s var(--ease);
+  white-space:nowrap; font-family:var(--font);
+}
+.class-tab:hover { border-color:var(--border-d); background:var(--bg); color:var(--text) }
+.class-tab.active-1 { background:#EFF6FF; border-color:#2563EB; color:#2563EB }
+.class-tab.active-2 { background:#ECFDF5; border-color:#059669; color:#059669 }
+.class-tab.active-3 { background:#F5F3FF; border-color:#7C3AED; color:#7C3AED }
+.class-tab .class-dot {
+  width:9px; height:9px; border-radius:50%; flex-shrink:0;
+}
+.class-dot-1 { background:#2563EB }
+.class-dot-2 { background:#059669 }
+.class-dot-3 { background:#7C3AED }
+.class-tab-add {
+  padding:7px 13px; border-radius:var(--r-sm);
+  border:1.5px dashed var(--border-d); background:transparent;
+  color:var(--text3); cursor:pointer; font-size:.8rem; font-weight:600;
+  transition:all .2s; font-family:var(--font);
+}
+.class-tab-add:hover { border-color:var(--p); color:var(--p); background:var(--p-l) }
+.class-count {
+  font-size:.68rem; background:rgba(0,0,0,.08);
+  padding:1px 6px; border-radius:99px; font-weight:800;
+}
+
+/* ═══════ FOOTER ═══════ */
+.app-footer {
+  text-align:center;
+  padding:14px 16px 22px;
+  font-size:.66rem;
+  color:var(--text3);
+  border-top:1px solid var(--border);
+  margin-top:36px;
+  letter-spacing:.3px;
+}
+
+/* ═══════ RESPONSIVE ═══════ */
+@media(max-width:640px){
+  .grid { grid-template-columns:1fr 1fr }
+  .niv-grid { grid-template-columns:1fr 1fr }
+  .add-btns { flex-direction:column }
+  .stats-row { grid-template-columns:1fr 1fr }
+  .hdr { padding:0 16px; height:56px }
+  .main { padding:16px 12px }
+  .setup-body, .setup-banner { padding:24px 22px }
+  .profil-hdr { padding:16px 18px }
+  .form-card { padding:16px 18px }
+  .tabs { gap:2px }
+  .tab { padding:7px 12px; font-size:.78rem }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading" id="loading"><div class="spinner"></div><div class="loading-text" style="margin-top:12px;font-size:.85rem;color:var(--text2)">Chargement…</div></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<div class="hdr" id="hdr">
+  <button class="back-btn" id="back-btn" onclick="goBack()">← Retour</button>
+  <div class="hdr-logo">MCV</div>
+  <div style="flex:1;min-width:0">
+    <div class="hdr-title" id="hdr-title">Suivi Compétences E31 / E32</div>
+    <div class="hdr-sub" id="hdr-sub">BAC PRO MCV Option A · Outil créé par Olivier NUGUET</div>
+  </div>
+  <div class="hdr-actions" id="hdr-actions"></div>
+</div>
+
+<!-- ======= VUE SETUP (premier démarrage) ======= -->
+<div class="view on" id="view-setup">
+  <div class="main">
+    <div class="setup-card">
+      <div class="setup-banner">
+        <h1>📋 Bienvenue — Saisie des élèves</h1>
+        <p>Collez votre liste de classe pour démarrer. Cette opération n'est à faire qu'une seule fois.</p>
+      </div>
+      <div class="setup-body">
+        <div class="setup-step">
+          <div class="setup-num">1</div>
+          <div style="flex:1">
+            <div style="font-weight:700;margin-bottom:4px">Choisissez le format de votre liste</div>
+            <div class="format-radio">
+              <label><input type="radio" name="fmt" value="NOM_PRENOM" checked> NOM Prénom</label>
+              <label><input type="radio" name="fmt" value="PRENOM_NOM"> Prénom NOM</label>
+              <label><input type="radio" name="fmt" value="AUTO"> Détection automatique</label>
+            </div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-num">2</div>
+          <div style="flex:1">
+            <div style="font-weight:700;margin-bottom:6px">Collez votre liste (depuis ProNotes, Excel, Word…)</div>
+            <div class="hint-box">
+              Un élève par ligne — formats acceptés :<br>
+              <code>DUPONT Jean</code> &nbsp;·&nbsp; <code>Jean DUPONT</code> &nbsp;·&nbsp;
+              <code>DUPONT, Jean</code> &nbsp;·&nbsp; depuis Excel (tabulation)<br>
+              Les numéros de ligne en début sont ignorés automatiquement.
+            </div>
+            <textarea class="paste-area" id="setup-paste"
+              placeholder="Collez ici votre liste…&#10;&#10;Exemple :&#10;DUPONT Jean&#10;MARTIN Sophie&#10;BERNARD Kevin&#10;…"></textarea>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
+          <button class="btn btn-g" onclick="skipSetup()">Passer (saisie manuelle)</button>
+          <button class="btn btn-p" onclick="setupParseAndGo()">Continuer →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= VUE DASHBOARD ======= -->
+<div class="view" id="view-dashboard">
+  <div class="main">
+    <!-- Bandeau enseignant -->
+    <div class="teacher-banner" id="teacher-banner">
+      <span class="teacher-banner-label">👤 Enseignant</span>
+      <input type="text" id="teacher-input" placeholder="Saisissez vos nom et prénom…"
+             oninput="saveTeacher(this.value)" autocomplete="name">
+      <span class="teacher-banner-hint">Votre nom apparaîtra sur chaque TP saisi</span>
+    </div>
+    <div class="toolbar">
+      <div style="font-weight:800;font-size:.9rem">🎓 Mes élèves</div>
+      <div class="toolbar-sep"></div>
+      <button class="btn btn-g btn-sm" onclick="exportClassePDF()">📄 Bilan classe PDF</button>
+      <button class="btn btn-p btn-sm" onclick="openGroupeSaisie()">👥 Saisie groupée</button>
+      <button class="btn btn-g btn-sm" onclick="openImportModal()">📋 Réimporter la liste</button>
+      <button class="btn btn-g btn-sm" onclick="exportData()">💾 Exporter</button>
+    </div>
+    <!-- Sélecteur de classe -->
+    <div class="class-switcher" id="class-switcher"></div>
+    <div class="dash-top">
+      <h2 id="dash-title">Tableau de bord</h2>
+      <div class="search-wrap">
+        <span class="si">🔍</span>
+        <input type="text" placeholder="Rechercher…" id="search" oninput="renderDash(this.value)">
+      </div>
+    </div>
+    <div id="dash-grid" class="grid"></div>
+  </div>
+</div>
+
+<!-- ======= VUE PROFIL ======= -->
+<div class="view" id="view-profil">
+  <div class="main">
+    <div class="profil-hdr">
+      <div class="profil-avatar" id="profil-avatar">?</div>
+      <div class="profil-info">
+        <div class="profil-name" id="profil-name">—</div>
+        <div class="profil-class" id="profil-class">—</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-g btn-sm" onclick="openEleveView()">👁 Vue élève</button>
+        <button class="btn btn-g btn-sm" onclick="openEditModal()">✏️ Modifier</button>
+        <button class="btn btn-g btn-sm" onclick="exportPDF()">📄 PDF</button>
+      </div>
+    </div>
+    <div id="profil-alert"></div>
+    <div class="stats-row" id="profil-stats"></div>
+    <div class="add-btns">
+      <button class="btn btn-p" onclick="goToForm('E31')">➕ Nouveau TP — E31 Vente-conseil</button>
+      <button class="btn btn-ov" onclick="goToForm('E32')">➕ Nouveau TP — E32 Suivi des ventes</button>
+    </div>
+    <div class="tabs">
+      <div class="tab on" id="tab-E31" onclick="switchTab('E31')">📋 E31</div>
+      <div class="tab" id="tab-E32" onclick="switchTab('E32')">📋 E32</div>
+      <div class="tab" id="tab-PROFIL" onclick="switchTab('PROFIL')">📈 Profil global</div>
+      <div class="tab" id="tab-GRAPH" onclick="switchTab('GRAPH')">📊 Progression</div>
+    </div>
+    <div class="tab-pane on" id="pane-E31"></div>
+    <div class="tab-pane" id="pane-E32"></div>
+    <div class="tab-pane" id="pane-PROFIL"></div>
+    <div class="tab-pane" id="pane-GRAPH"></div>
+  </div>
+</div>
+
+<!-- ======= VUE FORMULAIRE TP ======= -->
+<div class="view" id="view-form">
+  <div class="main">
+    <div id="form-alert"></div>
+    <div class="form-card">
+      <h3 id="form-title">Nouveau TP</h3>
+      <div class="form-row">
+        <div class="form-group" style="max-width:110px">
+          <label>N° TP</label>
+          <select id="f-num"></select>
+        </div>
+        <div class="form-group">
+          <label>Intitulé du TP <span style="font-weight:400;color:var(--text3)">(optionnel)</span></label>
+          <input type="text" id="f-nom" placeholder="Ex : Enquête de satisfaction, Accueil client…" maxlength="80">
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:10px">
+        <div class="form-group" style="flex:1;min-width:160px">
+          <label>Classe de réalisation</label>
+          <select id="f-classe">
+            <option value="2nde MRC">2nde MRC</option>
+            <option value="1ère BAC PRO MCV">1ère BAC PRO MCV</option>
+            <option value="Terminale BAC PRO MCV">Terminale BAC PRO MCV</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;min-width:160px">
+          <label>Contexte de réalisation</label>
+          <select id="f-pfmp">
+            <option value="Formation en établissement">🏫 Formation en établissement</option>
+            <option value="PFMP 1">🏢 PFMP 1</option>
+            <option value="PFMP 2">🏢 PFMP 2</option>
+            <option value="PFMP 3">🏢 PFMP 3</option>
+            <option value="PFMP 4">🏢 PFMP 4</option>
+            <option value="PFMP 5">🏢 PFMP 5</option>
+            <option value="PFMP 6">🏢 PFMP 6</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;min-width:160px">
+          <label>Épreuve</label>
+          <div class="auto-pill" id="f-ep">—</div>
+        </div>
+        <div class="form-group" style="flex:1;min-width:160px">
+          <label>Groupe de compétences</label>
+          <div class="auto-pill" id="f-gc">—</div>
+        </div>
+      </div>
+    </div>
+    <div id="mc-list"></div>
+    <div class="note-bar" id="note-bar">
+      <span class="note-bar-lbl">📊 Note moyenne du TP</span>
+      <span class="note-bar-val" id="note-bar-val">—</span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:40px">
+      <button class="btn btn-p" id="save-btn" onclick="saveTP()">💾 Enregistrer ce TP</button>
+      <button class="btn btn-g" onclick="goBack()">✖ Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL MODIFIER ÉLÈVE ===== -->
+<div class="modal-bg" id="modal-edit" onclick="if(event.target===this)closeEdit()">
+  <div class="modal modal-sm">
+    <h3>✏️ Modifier l'élève</h3>
+    <label>Prénom</label><input type="text" id="e-prenom" placeholder="Prénom">
+    <label>NOM</label><input type="text" id="e-nom" placeholder="NOM">
+    <label>Classe</label>
+    <select id="e-classe">
+      <option value="">— Sélectionner —</option>
+      <option value="2nde MRC">2nde MRC</option>
+            <option value="1ère BAC PRO MCV">1ère BAC PRO MCV</option>
+      <option value="Terminale BAC PRO MCV">Terminale BAC PRO MCV</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn btn-g" onclick="closeEdit()">Annuler</button>
+      <button class="btn btn-p" onclick="saveEdit()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL IMPORT ===== -->
+<div class="modal-bg" id="modal-import" onclick="if(event.target===this)closeImport()">
+  <div class="modal modal-lg">
+    <h3>📋 Réimporter / modifier la liste des élèves</h3>
+    <div class="import-step on" id="imp-s1">
+      <div class="hint-box">
+        Collez votre liste depuis ProNotes, Excel ou Word — un élève par ligne.<br>
+        <strong>Attention :</strong> cela remplacera les noms existants (les évaluations sont conservées).
+      </div>
+      <div class="format-radio" style="margin-bottom:10px">
+        <label><input type="radio" name="ifmt" value="NOM_PRENOM" checked> NOM Prénom</label>
+        <label><input type="radio" name="ifmt" value="PRENOM_NOM"> Prénom NOM</label>
+        <label><input type="radio" name="ifmt" value="AUTO"> Détection auto</label>
+      </div>
+      <textarea class="paste-area" id="imp-paste" placeholder="Collez ici…"></textarea>
+      <div class="modal-actions">
+        <button class="btn btn-g" onclick="closeImport()">Annuler</button>
+        <button class="btn btn-p" onclick="impPreview()">Analyser →</button>
+      </div>
+    </div>
+    <div class="import-step" id="imp-s2">
+      <div class="imp-count" id="imp-count"></div>
+      <div class="alert alert-info">✏️ Vérifiez et corrigez si besoin avant de confirmer.</div>
+      <div class="modal-body" style="max-height:55vh;overflow-y:auto">
+        <table class="ptable">
+          <thead><tr><th class="rn">#</th><th>Prénom</th><th>NOM</th><th>Classe</th></tr></thead>
+          <tbody id="imp-tbody"></tbody>
+        </table>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-g" onclick="impBack()">← Recommencer</button>
+        <button class="btn btn-g" onclick="closeImport()">Annuler</button>
+        <button class="btn btn-p" onclick="impConfirm()">✅ Confirmer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL PREVIEW SETUP ===== -->
+<div class="modal-bg" id="modal-setup-preview" onclick="">
+  <div class="modal modal-lg">
+    <h3>✅ Vérifiez la liste avant de confirmer</h3>
+    <div class="imp-count" id="sp-count"></div>
+    <div class="alert alert-info">✏️ Corrigez si nécessaire — vous pourrez toujours modifier ensuite.</div>
+    <div class="modal-body" style="max-height:55vh;overflow-y:auto">
+      <table class="ptable">
+        <thead><tr><th class="rn">#</th><th>Prénom</th><th>NOM</th><th>Classe</th></tr></thead>
+        <tbody id="sp-tbody"></tbody>
+      </table>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-g" onclick="closeSetupPreview()">← Modifier la liste</button>
+      <button class="btn btn-p" onclick="spConfirm()">✅ Confirmer et démarrer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ================================================================
+// RÉFÉRENTIEL (fidèle aux PDFs annexés)
+// ================================================================
+const REF = {
+  E31:{
+    groupe:'GC1 : Conseiller et vendre', badge:'E31 — Vente-conseil', cls:'p',
+    mcs:[
+      { id:'E31_MC1', nom:'Assurer la veille commerciale', comps:[
+        {id:'E31_MC1_C1',txt:"Rechercher, hiérarchiser, exploiter et actualiser en continu les informations sur l'entreprise et son marché"},
+        {id:'E31_MC1_C2',txt:"Maîtriser la technologie des produits"},
+        {id:'E31_MC1_C3',txt:"Sélectionner les outils de recherche d'information les plus adaptés"}
+      ]},
+      { id:'E31_MC2', nom:'Réaliser la vente dans un cadre omnicanal', comps:[
+        {id:'E31_MC2_C1',txt:"Intégrer l'omnicanal dans le processus de vente"},
+        {id:'E31_MC2_C2',txt:"Prendre contact avec le client"},
+        {id:'E31_MC2_C3',txt:"S'adapter au contexte commercial et au comportement du client"},
+        {id:'E31_MC2_C4',txt:"Découvrir, analyser et identifier le(s) besoin(s) du client, sa (ses) motivation(s) et ses freins éventuels"},
+        {id:'E31_MC2_C5',txt:"Découvrir, analyser et reformuler les besoins du client"},
+        {id:'E31_MC2_C6',txt:"Présenter l'entreprise et/ou ses produits et/ou ses services"},
+        {id:'E31_MC2_C7',txt:"Conseiller le client en proposant la solution adaptée"},
+        {id:'E31_MC2_C8',txt:"Argumenter"},
+        {id:'E31_MC2_C9',txt:"Réaliser une démonstration le cas échéant"},
+        {id:'E31_MC2_C10',txt:"Répondre aux objections du client"},
+        {id:'E31_MC2_C11',txt:"Proposer les produits et/ou les services associés"},
+        {id:'E31_MC2_C12',txt:"Détecter les opportunités de vente(s) additionnelle(s) et les concrétiser"},
+        {id:'E31_MC2_C13',txt:"S'assurer de la disponibilité du produit"},
+        {id:'E31_MC2_C14',txt:"Formaliser l'accord du client"}
+      ]},
+      { id:'E31_MC3', nom:"Assurer l'exécution de la vente", comps:[
+        {id:'E31_MC3_C1',txt:"Mettre en place les modalités de règlement et de livraison"},
+        {id:'E31_MC3_C2',txt:"Rassurer le client sur son choix"},
+        {id:'E31_MC3_C3',txt:"Prendre congé"}
+      ]}
+    ]
+  },
+  E32:{
+    groupe:'GC2 : Suivre les ventes', badge:'E32 — Suivi des ventes', cls:'v',
+    mcs:[
+      { id:'E32_MC1', nom:'Assurer le suivi de la commande du produit et/ou du service', comps:[
+        {id:'E32_MC1_C1',txt:"Suivre l'évolution de la commande et éventuellement du règlement"},
+        {id:'E32_MC1_C2',txt:"Informer le client des délais et des modalités de mise à disposition"}
+      ]},
+      { id:'E32_MC2', nom:'Mettre en œuvre le ou les services associés', comps:[
+        {id:'E32_MC2_C1',txt:"Sélectionner le cas échéant le prestataire le plus adapté"},
+        {id:'E32_MC2_C2',txt:"Collecter et transmettre les informations au service de l'entreprise ou aux prestataires concernés"},
+        {id:'E32_MC2_C3',txt:"Suivre l'exécution du ou des service(s) associé(s) et en rendre compte"},
+        {id:'E32_MC2_C4',txt:"Effectuer le cas échéant les relances"}
+      ]},
+      { id:'E32_MC3', nom:'Traiter les retours et les réclamations du client', comps:[
+        {id:'E32_MC3_C1',txt:"Identifier le(s) problème(s) rencontré(s) par le client"},
+        {id:'E32_MC3_C2',txt:"Proposer une solution adaptée en tenant compte des procédures de l'entreprise et de la règlementation"}
+      ]},
+      { id:'E32_MC4', nom:"S'assurer de la satisfaction du client", comps:[
+        {id:'E32_MC4_C1',txt:"Collecter les informations de satisfaction auprès des clients"},
+        {id:'E32_MC4_C2',txt:"Mesurer et analyser la satisfaction du client"},
+        {id:'E32_MC4_C3',txt:"Transmettre les informations sur la satisfaction du client"},
+        {id:'E32_MC4_C4',txt:"Exploiter les informations recueillies à des fins d'amélioration"},
+        {id:'E32_MC4_C5',txt:"Proposer des éléments de nature à améliorer la satisfaction client"}
+      ]}
+    ]
+  }
+};
+
+const NIVEAUX = {
+  insuf:{lbl:'🔴 Maîtrise insuffisante', min:0,  max:5,  def:2.5,  cls:'insuf'},
+  frag: {lbl:'🟠 Maîtrise fragile',      min:5,  max:10, def:7.5,  cls:'frag'},
+  sati: {lbl:'🟡 Maîtrise satisfaisante',min:10, max:15, def:12.5, cls:'sati'},
+  tbon: {lbl:'🟢 Très bonne maîtrise',   min:15, max:20, def:17.5, cls:'tbon'}
+};
+
+// ================================================================
+// CONFIGURATION SUPABASE — À MODIFIER OBLIGATOIREMENT
+// ================================================================
+const SUPA_URL = 'https://essscchdrgeosaqxlwfh.supabase.co';  // ← Remplacer par votre URL
+const SUPA_KEY = 'sb_publishable_50EeteMVZfifrwsRy9h5-A_3avl1imu';        // ← Remplacer par votre clé anon
+
+// Cache local (les fonctions de rendu restent synchrones)
+let CACHE = { eleves: [], evaluations: [] };
+
+// Helper fetch Supabase
+async function supaFetch(endpoint, method='GET', body=null, extra={}) {
+  const headers = {
+    'apikey':        SUPA_KEY,
+    'Authorization': `Bearer ${SUPA_KEY}`,
+    'Content-Type':  'application/json',
+  };
+  // Prefer par défaut pour les écritures, sauf si extra le définit déjà
+  if(method !== 'GET' && !extra['Prefer']){
+    headers['Prefer'] = 'return=representation';
+  }
+  // extra écrase les headers par défaut (permet le upsert)
+  Object.assign(headers, extra);
+
+  const opts = { method, headers };
+  if(body !== null) opts.body = JSON.stringify(body);
+  const res = await fetch(`${SUPA_URL}/rest/v1/${endpoint}`, opts);
+  if(!res.ok){
+    const err = await res.text().catch(()=>'');
+    throw new Error(`Supabase [${method} /${endpoint.split('?')[0]}] ${res.status} — ${err.slice(0,120)}`);
+  }
+  const txt = await res.text();
+  return txt ? JSON.parse(txt) : null;
+}
+
+// ================================================================
+// BASE DE DONNÉES — SUPABASE
+// ================================================================
+const DB = {
+  // Charge tout depuis Supabase et remplit le cache
+  async loadAll(){
+    const [eleves, evals] = await Promise.all([
+      supaFetch('eleves?select=*&order=ordre.asc'),
+      supaFetch('evaluations?select=*&order=created_at.asc')
+    ]);
+    CACHE.eleves = (eleves||[]).map(e=>({
+      id:e.id, nom:e.nom||'', prenom:e.prenom||'', classe:e.classe||'',
+      groupe: parseInt(e.groupe)||1
+    }));
+    CACHE.evaluations = (evals||[]).map(e=>({
+      id:e.id, eleveId:e.eleve_id, numTP:e.num_tp||'', nomTP:e.nom_tp||'',
+      classe:e.classe||'', epreuve:e.epreuve||'', pfmp:e.pfmp||'',
+      metaCompId:e.meta_comp_id||'', metaCompNom:e.meta_comp_nom||'',
+      competence:e.competence||'', niveauMaitrise:e.niveau_maitrise||'',
+      note:parseFloat(e.note)||0, dateSaisie:e.date_saisie||'', enseignant:e.enseignant||''
+    }));
+  },
+  // Lectures depuis le cache (synchrones)
+  getEleves(groupe=null){
+    if(groupe===null) return CACHE.eleves;
+    return CACHE.eleves.filter(e=>e.groupe===groupe);
+  },
+  getEvals(groupe=null){
+    if(groupe===null) return CACHE.evaluations;
+    const ids=new Set(CACHE.eleves.filter(e=>e.groupe===groupe).map(e=>e.id));
+    return CACHE.evaluations.filter(e=>ids.has(e.eleveId));
+  },
+  getGroupes(){
+    return [...new Set(CACHE.eleves.map(e=>e.groupe||1))].sort();
+  },
+  hasData(){ return CACHE.eleves.length>0; },
+
+  // Sauvegarde un élève (PATCH)
+  async saveEleve(el){
+    await supaFetch(`eleves?id=eq.${el.id}`, 'PATCH',
+      { nom:el.nom, prenom:el.prenom, classe:el.classe });
+    const i=CACHE.eleves.findIndex(e=>e.id===el.id);
+    if(i>=0) CACHE.eleves[i]={...CACHE.eleves[i],...el};
+  },
+
+  // Sauvegarde tous les élèves d'un groupe (update individuel par PATCH)
+  async saveAllEleves(eleves, groupe=1){
+    await Promise.all(eleves.map((el, i) =>
+      supaFetch(`eleves?id=eq.${el.id}`, 'PATCH', {
+        nom: el.nom||'', prenom: el.prenom||'', classe: el.classe||'',
+        ordre: i, groupe: groupe
+      })
+    ));
+    eleves.forEach((el,i)=>{
+      const idx=CACHE.eleves.findIndex(e=>e.id===el.id);
+      if(idx>=0) CACHE.eleves[idx]={...CACHE.eleves[idx],...el,groupe,ordre:i};
+    });
+  },
+
+  // Crée 30 nouvelles lignes pour un groupe
+  async createGroupe(groupe){
+    const rows=Array.from({length:30},(_,i)=>({
+      id:uuid(), nom:'', prenom:'', classe:'', ordre:i, groupe
+    }));
+    await supaFetch('eleves','POST',rows);
+    rows.forEach(r=>CACHE.eleves.push({id:r.id,nom:'',prenom:'',classe:'',groupe}));
+    return rows;
+  },
+
+  // Sauvegarde un TP
+  async saveTP(tpData){
+    if(tpData.isEdit){
+      await supaFetch(
+        `evaluations?eleve_id=eq.${tpData.eleveId}&num_tp=eq.${encodeURIComponent(tpData.numTP)}&epreuve=eq.${tpData.epreuve}`,
+        'DELETE'
+      );
+      CACHE.evaluations=CACHE.evaluations.filter(e=>
+        !(e.eleveId===tpData.eleveId&&e.numTP===tpData.numTP&&e.epreuve===tpData.epreuve)
+      );
+    }
+    const date=new Date().toLocaleDateString('fr-FR');
+    const rows=tpData.evaluations.map(ev=>({
+      id:uuid(), eleve_id:tpData.eleveId, num_tp:tpData.numTP, nom_tp:tpData.nomTP||'',
+      classe:tpData.classe, epreuve:tpData.epreuve, pfmp:tpData.pfmp||'',
+      meta_comp_id:ev.metaCompId, meta_comp_nom:ev.metaCompNom, competence:ev.competence,
+      niveau_maitrise:ev.niveauMaitrise, note:ev.note, date_saisie:date, enseignant:tpData.enseignant||''
+    }));
+    await supaFetch('evaluations', 'POST', rows);
+    rows.forEach(r=>CACHE.evaluations.push({
+      id:r.id, eleveId:r.eleve_id, numTP:r.num_tp, nomTP:r.nom_tp,
+      classe:r.classe, epreuve:r.epreuve, pfmp:r.pfmp,
+      metaCompId:r.meta_comp_id, metaCompNom:r.meta_comp_nom, competence:r.competence,
+      niveauMaitrise:r.niveau_maitrise, note:r.note, dateSaisie:r.date_saisie, enseignant:r.enseignant
+    }));
+  },
+
+  // Supprime un TP
+  async deleteTP(eleveId,numTP,epreuve){
+    await supaFetch(
+      `evaluations?eleve_id=eq.${eleveId}&num_tp=eq.${encodeURIComponent(numTP)}&epreuve=eq.${epreuve}`,
+      'DELETE'
+    );
+    CACHE.evaluations=CACHE.evaluations.filter(e=>
+      !(e.eleveId===eleveId&&e.numTP===numTP&&e.epreuve===epreuve)
+    );
+  },
+
+  // Réinitialise tout (DELETE sans filtre)
+  async resetAll(){
+    await supaFetch('evaluations?id=neq.00000000-0000-0000-0000-000000000000','DELETE');
+    await supaFetch('eleves?id=neq.00000000-0000-0000-0000-000000000000','DELETE');
+    CACHE={eleves:[],evaluations:[]};
+  }
+};
+
+// ================================================================
+// ÉTAT
+// ================================================================
+let S = {
+  view:'setup', eleve:null, epreuve:null, isEdit:false,
+  activeTab:'E31',
+  currentGroupe: 1,   // classe active (1, 2 ou 3)
+  F:{ mc:{}, comp:{}, niv:{}, notes:{} }
+};
+
+// ================================================================
+// UTILITAIRES
+// ================================================================
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function uuid(){ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&0x3|0x8)).toString(16);}); }
+function avg(arr){ return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0; }
+function uniq(arr){ return [...new Set(arr)]; }
+function sc(n){ if(n<5)return'sc0';if(n<10)return'sc1';if(n<15)return'sc2';return'sc3'; }
+function nm(n){ return isNaN(n)||n===null?'—':parseFloat(n).toFixed(1); }
+function lbl(el){ const n=(el.nom||'').trim(),p=(el.prenom||'').trim(); if(!n&&!p)return'(Sans nom)'; return [p,n].filter(Boolean).join(' '); }
+function initials(el){ const p=(el.prenom||'').trim(),n=(el.nom||'').trim(); return ((p[0]||'')+(n[0]||'')).toUpperCase()||'?'; }
+
+function loading(on, txt='Chargement…'){
+  const el=$('loading');
+  if(!el) return;
+  el.classList.toggle('on', on);
+  const lt=el.querySelector('.loading-text');
+  if(lt) lt.textContent=txt;
+}
+
+function toast(msg,t=''){
+  const el=$('toast'); el.textContent=msg; el.className='toast on'+(t?' '+t:'');
+  clearTimeout(el._t); el._t=setTimeout(()=>{el.className='toast';},3000);
+}
+
+function showView(v){
+  ['setup','dashboard','profil','form'].forEach(x=>$(('view-'+x)).classList.toggle('on',x===v));
+  S.view=v;
+  $('back-btn').style.display=(v==='setup'||v==='dashboard')?'none':'flex';
+  renderHdrActions();
+}
+
+function saveTeacher(val){
+  localStorage.setItem('mcv_ens', val.trim());
+}
+
+function getTeacher(){
+  return localStorage.getItem('mcv_ens')||'';
+}
+
+function initTeacherBanner(){
+  const input=$('teacher-input');
+  if(input) input.value=getTeacher();
+}
+
+function renderHdrActions(){
+  const a=$('hdr-actions');
+  a.innerHTML=`
+    <button onclick="syncData()" title="Synchroniser les données" style="background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.25);color:#fff;padding:6px 14px;border-radius:99px;
+      cursor:pointer;font-size:.75rem;font-weight:600;font-family:var(--font);
+      display:flex;align-items:center;gap:6px;transition:.2s" id="sync-btn">
+      🔄 Synchroniser
+    </button>`;
+}
+
+async function syncData(){
+  const btn=$('sync-btn');
+  if(btn){ btn.innerHTML='⏳ …'; btn.disabled=true; }
+  try{
+    await DB.loadAll();
+    if(S.view==='dashboard') renderDash($('search')?.value||'');
+    else if(S.view==='profil'&&S.eleve){
+      S.eleve=DB.getEleves().find(e=>e.id===S.eleve.id)||S.eleve;
+      renderProfil();
+    }
+    toast('Données synchronisées ✓','ok');
+  }catch(e){ toast('Erreur sync : '+e.message,'err'); }
+  if(btn){ btn.innerHTML='🔄 Synchroniser'; btn.disabled=false; }
+}
+
+function goBack(){
+  if(S.view==='profil'){ renderDash($('search').value||''); showView('dashboard'); }
+  else if(S.view==='form'){ renderProfil(); showView('profil'); }
+}
+
+// ================================================================
+// PARSING LISTE ÉLÈVES
+// ================================================================
+function parseLine(line, fmt){
+  line=line.replace(/^\s*\d+[\.\)\-\s]+/,'').trim();
+  if(!line) return null;
+  let nom='',prenom='';
+  if(line.includes('\t')){
+    const p=line.split('\t').map(x=>x.trim()).filter(Boolean);
+    if(fmt==='PRENOM_NOM'){prenom=p[0];nom=p.slice(1).join(' ');}
+    else{nom=p[0];prenom=p.slice(1).join(' ');}
+    return{nom,prenom};
+  }
+  if(line.includes(',')){
+    const p=line.split(',').map(x=>x.trim());
+    return{nom:p[0],prenom:p.slice(1).join(' ').trim()};
+  }
+  const tokens=line.split(/\s+/).filter(Boolean);
+  if(tokens.length===1) return{nom:tokens[0],prenom:''};
+  const isAllCaps=t=>t===t.toUpperCase()&&/[A-ZÀÂÇÉÈÊËÎÏÔÙÛÜ]/.test(t);
+  if(fmt==='AUTO'){
+    if(isAllCaps(tokens[0])){nom=tokens[0];prenom=tokens.slice(1).join(' ');}
+    else if(isAllCaps(tokens[tokens.length-1])){prenom=tokens.slice(0,-1).join(' ');nom=tokens[tokens.length-1];}
+    else{prenom=tokens[0];nom=tokens.slice(1).join(' ');}
+  } else if(fmt==='PRENOM_NOM'){prenom=tokens[0];nom=tokens.slice(1).join(' ');}
+  else{nom=tokens[0];prenom=tokens.slice(1).join(' ');}
+  return{nom:nom.trim(),prenom:prenom.trim()};
+}
+
+function parseList(text, fmtName){
+  const fmt=document.querySelector(`input[name="${fmtName}"]:checked`)?.value||'NOM_PRENOM';
+  return text.split('\n').map(l=>parseLine(l.trim(),fmt)).filter(Boolean);
+}
+
+function buildPreviewRows(parsed, existing){
+  return existing.map((el,i)=>{
+    const p=parsed[i]||{nom:'',prenom:''};
+    return{id:el.id,nom:p.nom,prenom:p.prenom,classe:el.classe||''};
+  });
+}
+
+function previewTableHTML(rows, tbodyId){
+  return rows.map((r,i)=>`
+    <tr>
+      <td class="rn">${i+1}</td>
+      <td><input type="text" id="${tbodyId}-prenom-${i}" value="${esc(r.prenom)}" placeholder="Prénom"></td>
+      <td><input type="text" id="${tbodyId}-nom-${i}"    value="${esc(r.nom)}"    placeholder="NOM"></td>
+      <td><select id="${tbodyId}-classe-${i}">
+        <option value="">—</option>
+        <option value="2nde MRC"           ${r.classe==='2nde MRC'?'selected':''}>2nde MRC</option>
+        <option value="1ère BAC PRO MCV"      ${r.classe==='1ère BAC PRO MCV'?'selected':''}>1ère</option>
+        <option value="Terminale BAC PRO MCV" ${r.classe==='Terminale BAC PRO MCV'?'selected':''}>Terminale</option>
+      </select></td>
+    </tr>`).join('');
+}
+
+function collectRows(tbodyId, count){
+  return Array.from({length:count},(_,i)=>({
+    prenom:($(`${tbodyId}-prenom-${i}`)?.value||'').trim(),
+    nom:   ($(`${tbodyId}-nom-${i}`)?.value||'').trim(),
+    classe:$(`${tbodyId}-classe-${i}`)?.value||''
+  }));
+}
+
+// ================================================================
+// SETUP (premier lancement)
+// ================================================================
+async function setupParseAndGo(){
+  const text=$('setup-paste').value.trim();
+  if(!text){ await skipSetup(); return; }
+  const parsed=parseList(text,'fmt');
+  if(!parsed.length){ toast('Aucun élève reconnu','err'); return; }
+
+  loading(true,'Connexion à Supabase…');
+  try {
+    // Recharger les élèves existants depuis Supabase
+    await DB.loadAll();
+    let existing=DB.getEleves(1);  // toujours groupe 1 au premier setup
+
+    // Si aucun élève en base pour le groupe 1, créer 30 lignes vides
+    if(!existing.length){
+      const created = await DB.createGroupe(1);
+      existing = DB.getEleves(1);
+    }
+
+    const rows=buildPreviewRows(parsed,existing);
+    window._setupRows=rows;
+    window._setupIds=existing.map(e=>e.id);
+    $('sp-count').textContent=`${parsed.length} élève${parsed.length>1?'s':''} détecté${parsed.length>1?'s':''}`;
+    $('sp-tbody').innerHTML=previewTableHTML(rows,'sp');
+    loading(false);
+    $('modal-setup-preview').classList.add('on');
+
+  } catch(e) {
+    loading(false);
+    toast('Erreur Supabase : '+e.message,'err');
+    console.error('setupParseAndGo error:', e);
+  }
+}
+
+function closeSetupPreview(){ $('modal-setup-preview').classList.remove('on'); }
+
+async function spConfirm(){
+  const ids=window._setupIds||[];
+  const rows=collectRows('sp',ids.length);
+  const eleves=ids.map((id,i)=>({id,nom:rows[i].nom,prenom:rows[i].prenom,classe:rows[i].classe}));
+  loading(true,'Enregistrement des élèves…');
+  try {
+    await DB.saveAllEleves(eleves, 1);
+    closeSetupPreview();
+    toast(`${rows.filter(r=>r.nom||r.prenom).length} élèves enregistrés ✓`,'ok');
+    renderDash();
+    showView('dashboard');
+  } catch(e) {
+    toast('Erreur Supabase : '+e.message,'err');
+    console.error('spConfirm error:', e);
+  }
+  loading(false);
+}
+
+async function skipSetup(){
+  loading(true,'Initialisation…');
+  try {
+    await DB.loadAll();
+    let existing=DB.getEleves(1);
+    if(!existing.length){
+      await DB.createGroupe(1);
+    }
+    renderDash();
+    showView('dashboard');
+  } catch(e) {
+    toast('Erreur Supabase : '+e.message,'err');
+    console.error('skipSetup error:', e);
+  }
+  loading(false);
+}
+
+// ================================================================
+// SÉLECTEUR DE CLASSE
+// ================================================================
+function getClasseNames(){
+  try{ return JSON.parse(localStorage.getItem('mcv_classe_names')||'{}'); }catch(e){ return {}; }
+}
+function saveClasseNames(names){ localStorage.setItem('mcv_classe_names',JSON.stringify(names)); }
+function getClasseName(g){
+  const names=getClasseNames();
+  return names[g]||('Classe '+g);
+}
+
+let _renameGroupe=1;
+function openRename(g){
+  _renameGroupe=g;
+  $('rename-title').textContent='✏️ Renommer '+getClasseName(g);
+  $('rename-input').value=getClasseNames()[g]||'';
+  $('rename-input').placeholder='Ex : Term. MCVA, 1ère MCVB…';
+  $('modal-rename').classList.add('on');
+  setTimeout(()=>$('rename-input').focus(),100);
+}
+function closeRename(){ $('modal-rename').classList.remove('on'); }
+function confirmRename(){
+  const val=$('rename-input').value.trim();
+  const names=getClasseNames();
+  if(val) names[_renameGroupe]=val;
+  else delete names[_renameGroupe];
+  saveClasseNames(names);
+  closeRename();
+  toast('Classe renommée ✓','ok');
+  renderDash($('search')?.value||'');
+}
+
+function renderClassSwitcher(){
+  const groupes=DB.getGroupes();
+  const sw=$('class-switcher');
+  if(!sw) return;
+  let html=`<span class="class-switcher-label">📚 Mes classes</span>`;
+  groupes.forEach(g=>{
+    const count=DB.getEleves(g).filter(el=>(el.nom||'').trim()||(el.prenom||'').trim()).length;
+    const isActive=g===S.currentGroupe;
+    const name=getClasseName(g);
+    html+=`<button class="class-tab ${isActive?'active-'+g:''}" onclick="switchGroupe(${g})">
+      <span class="class-dot class-dot-${g}"></span>${esc(name)}
+      <span class="class-count">${count}</span>
+    </button>
+    <button title="Renommer ${esc(name)}" onclick="openRename(${g})"
+      style="background:none;border:none;cursor:pointer;font-size:.8rem;color:var(--text3);
+             padding:4px 5px;border-radius:4px;transition:.15s;line-height:1"
+      onmouseover="this.style.color='var(--p)'" onmouseout="this.style.color='var(--text3)'">✏️</button>`;
+  });
+  if(groupes.length<3){
+    const next=Math.max(...groupes,0)+1;
+    html+=`<button class="class-tab-add" onclick="addGroupe(${next})">+ Ajouter une classe</button>`;
+  }
+  sw.innerHTML=html;
+  document.body.setAttribute('data-groupe',String(S.currentGroupe));
+}
+
+function switchGroupe(g){
+  S.currentGroupe=g;
+  document.body.setAttribute('data-groupe',String(g));
+  renderDash($('search')?.value||'');
+}
+
+async function addGroupe(g){
+  if(g>3){toast('Maximum 3 classes','err');return;}
+  loading(true,'Création de la classe '+g+'…');
+  try{
+    await DB.createGroupe(g);
+    S.currentGroupe=g;
+    document.body.setAttribute('data-groupe',String(g));
+    renderDash();
+    toast('Classe '+g+' créée — collez la liste via 📋 Réimporter la liste','ok');
+    setTimeout(()=>openImportModal(),600);
+  }catch(e){toast('Erreur : '+e.message,'err');}
+  loading(false);
+}
+
+// ================================================================
+// DASHBOARD
+// ================================================================
+function renderDash(filter=''){
+  renderClassSwitcher();
+  const g=S.currentGroupe;
+  const eleves=DB.getEleves(g);
+  const evals=DB.getEvals(g);
+  const q=filter.toLowerCase().trim();
+  const namedEleves=eleves.filter(el=>(el.nom||'').trim()||(el.prenom||'').trim());
+  const list=namedEleves.filter(el=>!q||lbl(el).toLowerCase().includes(q));
+  const grid=$('dash-grid');
+  $('dash-title').textContent=`🎓 ${namedEleves.length} élève${namedEleves.length!==1?'s':''}`;
+
+  if(!list.length){
+    grid.innerHTML=`<div class="alert alert-info" style="grid-column:1/-1">
+      ${q?'Aucun élève trouvé.':'Aucun élève avec un nom renseigné. Utilisez <strong>📋 Réimporter la liste</strong>.'}
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML=list.map((el,i)=>{
+    const evs=evals.filter(e=>e.eleveId===el.id);
+    const e31=evs.filter(e=>e.epreuve==='E31');
+    const e32=evs.filter(e=>e.epreuve==='E32');
+    const tp31=uniq(e31.map(e=>e.numTP)).length;
+    const tp32=uniq(e32.map(e=>e.numTP)).length;
+    const a31=e31.length?avg(e31.map(e=>e.note)):null;
+    const a32=e32.length?avg(e32.map(e=>e.note)):null;
+    const num=namedEleves.indexOf(el)+1;
+    return `<div class="stu-card" data-id="${el.id}">
+      <div class="stu-num">${num}</div>
+      <div class="stu-name">${esc(lbl(el))}</div>
+      <div class="stu-class">${esc(el.classe||'Classe non renseignée')}</div>
+      <div class="stu-stats">
+        ${a31!==null?`<span class="stu-stat ${sc(a31)}">E31 : ${a31.toFixed(1)}</span>`:'<span class="stu-stat" style="background:var(--bg);color:var(--text3)">E31 —</span>'}
+        ${a32!==null?`<span class="stu-stat ${sc(a32)}">E32 : ${a32.toFixed(1)}</span>`:'<span class="stu-stat" style="background:var(--bg);color:var(--text3)">E32 —</span>'}
+        <span class="stu-stat" style="background:var(--green-l);color:var(--green)">${tp31+tp32} TP</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.stu-card').forEach(c=>{
+    c.addEventListener('click',()=>{ openProfil(c.dataset.id); });
+  });
+}
+
+async function deleteEmptySlots(){
+  const eleves=DB.getEleves();
+  const filled=eleves.filter(el=>(el.nom||'').trim()||(el.prenom||'').trim());
+  const removed=eleves.length-filled.length;
+  if(!confirm(`Supprimer ${removed} case${removed>1?'s':''} vide${removed>1?'s':''}  ?\nLes évaluations associées (si elles existent) seront également supprimées.`)) return;
+  loading(true,'Suppression…');
+  const emptyIds=eleves.filter(el=>!(el.nom||'').trim()&&!(el.prenom||'').trim()).map(e=>e.id);
+  for(const id of emptyIds){
+    await supaFetch(`eleves?id=eq.${id}`,'DELETE');
+  }
+  CACHE.eleves=filled;
+  CACHE.evaluations=CACHE.evaluations.filter(e=>filled.some(f=>f.id===e.eleveId));
+  loading(false);
+  toast(`${removed} case${removed>1?'s':''} supprimée${removed>1?'s':''} ✓`,'ok');
+  renderDash();
+}
+
+// ================================================================
+// PROFIL ÉLÈVE
+// ================================================================
+function openProfil(id){
+  S.eleve=DB.getEleves().find(e=>e.id===id);
+  if(!S.eleve) return;
+  $('hdr-title').textContent='👤 '+lbl(S.eleve);
+  $('hdr-sub').textContent=S.eleve.classe||'—';
+  renderProfil();
+  showView('profil');
+}
+
+function renderProfil(){
+  const el=S.eleve;
+  const evals=DB.getEvals().filter(e=>e.eleveId===el.id);
+  const ini=initials(el);
+  $('profil-avatar').textContent=ini;
+  $('profil-name').textContent=lbl(el);
+  $('profil-class').textContent=el.classe||'Classe non renseignée';
+
+  const e31=evals.filter(e=>e.epreuve==='E31');
+  const e32=evals.filter(e=>e.epreuve==='E32');
+  const a31=e31.length?avg(e31.map(e=>e.note)):null;
+  const a32=e32.length?avg(e32.map(e=>e.note)):null;
+  const tps31=uniq(e31.map(e=>e.numTP)).length;
+  const tps32=uniq(e32.map(e=>e.numTP)).length;
+
+  $('profil-stats').innerHTML=[
+    {v:tps31+tps32,l:'Total TP',c:''},
+    {v:tps31,l:'TP E31',c:'badge-e31'},
+    {v:tps32,l:'TP E32',c:'badge-e32'},
+    {v:a31!==null?a31.toFixed(1)+'':'-',l:'Moy. E31 /20',c:a31!==null?sc(a31):''},
+    {v:a32!==null?a32.toFixed(1)+'':'-',l:'Moy. E32 /20',c:a32!==null?sc(a32):''}
+  ].map(s=>`<div class="stat-box"><div class="stat-val ${s.c}">${esc(String(s.v))}</div><div class="stat-lbl">${s.l}</div></div>`).join('');
+
+  // P3 — Alerte compétences jamais évaluées
+  renderProfilAlert(evals);
+
+  renderTPPane('E31'); renderTPPane('E32'); renderProfilPane();
+  switchTab(S.activeTab);
+}
+
+function renderTPPane(ep){
+  const evals=DB.getEvals().filter(e=>e.eleveId===S.eleve.id&&e.epreuve===ep);
+  const tps=uniq(evals.map(e=>e.numTP)).sort((a,b)=>parseInt(a)-parseInt(b));
+  const pane=$('pane-'+ep);
+  const isV=ep==='E32';
+
+  if(!tps.length){
+    pane.innerHTML=`<div class="empty-state"><div class="ico">📂</div>
+      Aucun TP ${ep} pour cet élève.
+      <br><br><button class="btn ${isV?'btn-ov':'btn-p'} btn-sm" onclick="goToForm('${ep}')">➕ Ajouter un TP ${ep}</button></div>`;
+    return;
+  }
+
+  pane.innerHTML='<div class="tp-list">'+tps.map(numTP=>{
+    const rows=evals.filter(e=>e.numTP===numTP);
+    const note=avg(rows.map(e=>e.note));
+    const mcs=uniq(rows.map(r=>r.metaCompNom)).join(' · ');
+    const date=rows[0]?.dateSaisie||'';
+    const classe=rows[0]?.classe||'';
+    const pfmp=rows[0]?.pfmp||'';
+    const nomTP=rows[0]?.nomTP||'';
+    const enseignant=rows[0]?.enseignant||'';
+    const n=rows.length;
+    const pfmpBadge=pfmp?`<span class="pfmp-badge ${pfmp.startsWith('PFMP')?'':'pfmp-etab'}">${pfmp}</span>`:'';
+    const nomLabel=nomTP?`<span style="font-weight:700;color:var(--text)">${esc(nomTP)}</span> — `:'';
+    const ensBadge=enseignant?`<span style="background:var(--bg);color:var(--text2);font-size:.68rem;
+      padding:1px 8px;border-radius:99px;border:1px solid var(--border);font-weight:600">
+      👤 ${esc(enseignant)}</span>`:'';
+    return `<div class="tp-row ${isV?'e32':''}">
+      <div class="tp-num">TP${numTP}</div>
+      <div class="tp-body">
+        <div class="tp-title">${nomLabel}${esc(mcs||'—')}</div>
+        <div class="tp-meta" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          ${pfmpBadge}${ensBadge}
+          <span>${esc(classe)} · ${n} compétence${n>1?'s':''} · ${esc(date)}</span>
+        </div>
+      </div>
+      <div class="tp-score ${sc(note)}">${note.toFixed(1)}/20</div>
+      <div class="tp-actions">
+        <button class="btn btn-o btn-xs" onclick="editTP('${numTP}','${ep}')">✏️</button>
+        <button class="btn btn-r btn-xs" onclick="delTP('${numTP}','${ep}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('')+'</div>';
+}
+
+function renderProfilPane(){
+  const evals=DB.getEvals().filter(e=>e.eleveId===S.eleve.id);
+  let html='';
+  ['E31','E32'].forEach(ep=>{
+    const ref=REF[ep];
+    const epEvs=evals.filter(e=>e.epreuve===ep);
+    const isV=ep==='E32';
+    html+=`<div class="cov-section">
+      <h4 style="font-size:.88rem;font-weight:800;color:var(--${isV?'violet':'p'});margin-bottom:10px">${ref.badge}</h4>`;
+    ref.mcs.forEach(mc=>{
+      const mcEvs=epEvs.filter(e=>e.metaCompId===mc.id);
+      const cov=mc.comps.filter(c=>mcEvs.some(e=>e.competence===c.txt)).length;
+      html+=`<div class="cov-mc-title">${esc(mc.nom)}
+        <span class="badge ${isV?'badge-e32':'badge-e31'}">${cov}/${mc.comps.length}</span></div>`;
+      mc.comps.forEach(c=>{
+        const cEvs=mcEvs.filter(e=>e.competence===c.txt);
+        const done=cEvs.length>0;
+        const an=done?avg(cEvs.map(e=>e.note)):null;
+        const clr=done?`var(--${sc(an).replace('sc0','red').replace('sc1','amber').replace('sc2','green').replace('sc3','sky')})`:  'var(--border)';
+        html+=`<div class="cov-row">
+          <div class="cov-lbl" title="${esc(c.txt)}">${esc(c.txt.length>65?c.txt.slice(0,62)+'…':c.txt)}</div>
+          <div class="cov-bar"><div class="cov-fill" style="width:${done?100:0}%;background:${clr}"></div></div>
+          <div class="cov-note ${done?sc(an):''}">${done?an.toFixed(1):'—'}</div>
+        </div>`;
+      });
+    });
+    html+='</div>';
+  });
+  $('pane-PROFIL').innerHTML=html||'<div class="empty-state"><div class="ico">📈</div>Aucune évaluation.</div>';
+}
+
+function switchTab(t){
+  S.activeTab=t;
+  ['E31','E32','PROFIL','GRAPH'].forEach(x=>{
+    const tab=$('tab-'+x), pane=$('pane-'+x);
+    if(tab) tab.classList.toggle('on',x===t);
+    if(pane) pane.classList.toggle('on',x===t);
+  });
+  if(t==='GRAPH') renderGraph();
+}
+
+// ================================================================
+// FORMULAIRE TP
+// ================================================================
+function goToForm(ep, editNum=null){
+  S.epreuve=ep; S.isEdit=!!editNum;
+  S.F={mc:{},comp:{},niv:{},notes:{}};
+  const ref=REF[ep]; const isV=ep==='E32';
+
+  $('form-title').textContent=(editNum?'Modifier TP'+editNum:' Nouveau TP')+' — '+ref.badge;
+  $('form-alert').innerHTML='';
+  $('f-ep').textContent=ref.badge; $('f-ep').className='auto-pill'+(isV?' v':'');
+  $('f-gc').textContent=ref.groupe; $('f-gc').className='auto-pill'+(isV?' v':'');
+  $('save-btn').className='btn '+(isV?'btn-v':'btn-p');
+  $('note-bar').className='note-bar'+(isV?' v':'');
+
+  const sel=$('f-num'); sel.innerHTML='';
+
+  // Calculer le prochain numéro de TP automatiquement (si nouveau TP)
+  let nextTP = 1;
+  if(!editNum){
+    const existingTPs = uniq(
+      DB.getEvals()
+        .filter(e => e.eleveId === S.eleve.id && e.epreuve === ep)
+        .map(e => parseInt(e.numTP))
+    );
+    if(existingTPs.length > 0){
+      const maxTP = Math.max(...existingTPs);
+      nextTP = Math.min(maxTP + 1, 20); // plafonné à 20
+    }
+  }
+
+  for(let i=1;i<=20;i++){
+    const o=document.createElement('option');
+    o.value=i; o.textContent='TP '+i;
+    if(editNum && String(i)===String(editNum)) o.selected=true;
+    else if(!editNum && i===nextTP) o.selected=true;
+    sel.appendChild(o);
+  }
+  // Pré-sélectionner la classe de l'élève si connue
+  const clsSel=$('f-classe');
+  if(S.eleve&&S.eleve.classe) clsSel.value=S.eleve.classe;
+
+  // Méta-compétences avec blocs d'évaluation intégrés
+  $('mc-list').innerHTML=ref.mcs.map(mc=>`
+    <div class="mc-section">
+      <div class="mc-hdr" id="mch-${mc.id}" onclick="toggleMC('${mc.id}')">
+        <input type="checkbox" class="mc-cb${isV?' v':''}" id="cb-mc-${mc.id}"
+               onclick="event.stopPropagation()" onchange="onMCCheck('${mc.id}',this.checked)">
+        <label class="mc-lbl" for="cb-mc-${mc.id}">${esc(mc.nom)}</label>
+        <span class="mc-arrow" id="arr-${mc.id}">▼</span>
+      </div>
+      <div class="mc-body" id="mcb-${mc.id}">
+        <div class="mc-hint">Cochez les compétences effectivement mobilisées dans ce TP :</div>
+        ${mc.comps.map(c=>`
+          <div class="comp-item" id="ci-${c.id}" onclick="toggleComp('${mc.id}','${c.id}')">
+            <input type="checkbox" class="comp-cb${isV?' v':''}" id="cb-${c.id}"
+                   onclick="event.stopPropagation()" onchange="onCompCheck('${mc.id}','${c.id}',this.checked)">
+            <span class="comp-txt">${esc(c.txt)}</span>
+          </div>
+          <div class="eval-block" id="eb-${c.id}">
+            <div class="eval-name${isV?' v':''}">🎯 ${esc(c.txt)}</div>
+            <div class="eval-inner">
+              <div class="niv-label" style="color:var(--text2)">
+                Sélectionnez le niveau de maîtrise de l'élève :
+              </div>
+              <div class="niv-grid">
+                ${Object.entries(NIVEAUX).map(([k,n])=>`
+                  <button class="niv-btn ${n.cls}" id="nb-${c.id}-${k}"
+                          onclick="selNiv('${c.id}','${k}')">${n.lbl}</button>`).join('')}
+              </div>
+              <div class="slider-row" id="sr-${c.id}">
+                <span class="range-lbl" id="rl-${c.id}">0—5</span>
+                <input type="range" id="rng-${c.id}" min="0" max="5" step="0.5" value="2.5"
+                       oninput="onSlide('${c.id}',this.value)">
+                <div class="note-disp${isV?' v':''}" id="nd-${c.id}">2.5</div>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  // Pré-remplir si édition
+  if(editNum) prefillForm(editNum, ep);
+  updateNoteBar();
+  showView('form');
+  $('hdr-title').textContent=(editNum?'Modifier TP'+editNum:'Nouveau TP')+' — '+lbl(S.eleve);
+  $('hdr-sub').textContent=ref.groupe;
+}
+
+function toggleMC(id){
+  const body=$('mcb-'+id), open=body.classList.toggle('open');
+  $('arr-'+id).textContent=open?'▲':'▼';
+  $('mch-'+id).classList.toggle('checked',open);
+  const isV=S.epreuve==='E32';
+  if(open) $('mch-'+id).classList.toggle('v',isV);
+  if(open&&!$('cb-mc-'+id).checked){ $('cb-mc-'+id).checked=true; onMCCheck(id,true); }
+}
+
+function onMCCheck(id,checked){
+  S.F.mc[id]=checked;
+  // Ouvrir/fermer automatiquement le corps de la méta-compétence
+  const body=$('mcb-'+id);
+  const arrow=$('arr-'+id);
+  const hdr=$('mch-'+id);
+  const isV=S.epreuve==='E32';
+  if(checked){
+    body.classList.add('open');
+    if(arrow) arrow.textContent='▲';
+    hdr.classList.add('checked');
+    if(isV) hdr.classList.add('v');
+  } else {
+    body.classList.remove('open');
+    if(arrow) arrow.textContent='▼';
+    hdr.classList.remove('checked','v');
+    const mc=REF[S.epreuve].mcs.find(m=>m.id===id);
+    mc?.comps.forEach(c=>uncheckComp(c.id));
+  }
+}
+
+function uncheckComp(id){
+  $('cb-'+id) && ($('cb-'+id).checked=false);
+  $('ci-'+id)?.classList.remove('on','v');
+  $('eb-'+id)?.classList.remove('on');
+  delete S.F.comp[id]; delete S.F.niv[id]; delete S.F.notes[id];
+  updateNoteBar();
+}
+
+function toggleComp(mcId,id){
+  const cb=$('cb-'+id); cb.checked=!cb.checked; onCompCheck(mcId,id,cb.checked);
+}
+
+function onCompCheck(mcId,id,checked){
+  S.F.comp[id]=checked;
+  const isV=S.epreuve==='E32';
+  $('ci-'+id).classList.toggle('on',checked);
+  if(isV) $('ci-'+id).classList.toggle('v',checked);
+  $('eb-'+id).classList.toggle('on',checked);
+  if(!checked){ delete S.F.niv[id]; delete S.F.notes[id]; }
+  updateNoteBar();
+}
+
+function selNiv(id,key){
+  S.F.niv[id]=key;
+  const n=NIVEAUX[key];
+  Object.keys(NIVEAUX).forEach(k=>$('nb-'+id+'-'+k)?.classList.toggle('on',k===key));
+  const rng=$('rng-'+id);
+  rng.min=n.min; rng.max=n.max; rng.step=0.5;
+  const ex=S.F.notes[id];
+  rng.value=(ex!==undefined&&ex>=n.min&&ex<=n.max)?ex:n.def;
+  S.F.notes[id]=parseFloat(rng.value);
+  $('rl-'+id).textContent=n.min+'—'+n.max;
+  $('nd-'+id).textContent=parseFloat(rng.value).toFixed(1);
+  $('sr-'+id).classList.add('on');
+  updateNoteBar();
+}
+
+function onSlide(id,v){ S.F.notes[id]=parseFloat(v); $('nd-'+id).textContent=parseFloat(v).toFixed(1); updateNoteBar(); }
+
+function updateNoteBar(){
+  const sel=Object.keys(S.F.comp).filter(k=>S.F.comp[k]);
+  const noted=sel.filter(id=>S.F.notes[id]!==undefined);
+  $('note-bar-val').textContent=noted.length?avg(noted.map(id=>S.F.notes[id])).toFixed(1)+' /20':'—';
+}
+
+function allMCs(){ return REF[S.epreuve].mcs; }
+function allComps(){ return allMCs().flatMap(m=>m.comps); }
+
+function prefillForm(numTP, ep){
+  const evals=DB.getEvals().filter(e=>e.eleveId===S.eleve.id&&e.numTP===numTP&&e.epreuve===ep);
+  const isV=ep==='E32';
+  // Restaurer le contexte PFMP et le nom du TP
+  if(evals[0]?.pfmp){ const ps=$('f-pfmp'); if(ps) ps.value=evals[0].pfmp; }
+  if(evals[0]?.nomTP !== undefined){ const fn=$('f-nom'); if(fn) fn.value=evals[0].nomTP||''; }
+  evals.forEach(ev=>{
+    if(!S.F.mc[ev.metaCompId]){
+      S.F.mc[ev.metaCompId]=true;
+      $('cb-mc-'+ev.metaCompId).checked=true;
+      $('mcb-'+ev.metaCompId).classList.add('open');
+      $('arr-'+ev.metaCompId).textContent='▲';
+      $('mch-'+ev.metaCompId).classList.add('checked');
+      if(isV) $('mch-'+ev.metaCompId).classList.add('v');
+    }
+    const comp=allComps().find(c=>c.txt===ev.competence);
+    if(comp){
+      S.F.comp[comp.id]=true;
+      $('cb-'+comp.id).checked=true;
+      $('ci-'+comp.id).classList.add('on'); if(isV) $('ci-'+comp.id).classList.add('v');
+      $('eb-'+comp.id).classList.add('on');
+      const nk=Object.entries(NIVEAUX).find(([k,n])=>n.lbl===ev.niveauMaitrise)?.[0];
+      if(nk){ selNiv(comp.id,nk); $('rng-'+comp.id).value=ev.note; $('nd-'+comp.id).textContent=ev.note.toFixed(1); S.F.notes[comp.id]=ev.note; }
+    }
+  });
+  updateNoteBar();
+}
+
+// ================================================================
+// P3 — ALERTE COMPÉTENCES JAMAIS ÉVALUÉES
+// ================================================================
+function renderProfilAlert(evals){
+  const container=$('profil-alert');
+  if(!container) return;
+  const evaluated=new Set(evals.map(e=>e.competence));
+  const missing=[];
+  ['E31','E32'].forEach(ep=>{
+    REF[ep].mcs.forEach(mc=>{
+      mc.comps.forEach(c=>{
+        if(!evaluated.has(c.txt)) missing.push({ep,mc:mc.nom,comp:c.txt});
+      });
+    });
+  });
+  const total=['E31','E32'].flatMap(ep=>REF[ep].mcs.flatMap(m=>m.comps)).length;
+  const covPct=Math.round((total-missing.length)/total*100);
+  if(missing.length===0){
+    container.innerHTML=`<div class="alert alert-ok">✅ Toutes les compétences du référentiel ont été évaluées au moins une fois pour cet élève !</div>`;
+    return;
+  }
+  if(evals.length===0){ container.innerHTML=''; return; }
+  // Regrouper par épreuve
+  const byEp={E31:missing.filter(m=>m.ep==='E31'),E32:missing.filter(m=>m.ep==='E32')};
+  let inner='';
+  ['E31','E32'].forEach(ep=>{
+    const list=byEp[ep];
+    if(!list.length) return;
+    inner+=`<div style="margin-bottom:8px"><span style="font-size:.75rem;font-weight:800;opacity:.7">${ep}</span>`;
+    inner+=list.slice(0,5).map(m=>`<div class="alert-comp-item">⚠️ <span>${esc(m.comp)}</span></div>`).join('');
+    if(list.length>5) inner+=`<div class="alert-comp-item" style="font-style:italic">…et ${list.length-5} autre${list.length-5>1?'s':''}</div>`;
+    inner+='</div>';
+  });
+  container.innerHTML=`<div class="alert-comp">
+    <div class="alert-comp-title">⚠️ ${missing.length} compétence${missing.length>1?'s':''} pas encore évaluée${missing.length>1?'s':''} (couverture : ${covPct}%)</div>
+    <div class="alert-comp-list">${inner}</div>
+  </div>`;
+}
+
+// ================================================================
+// P5 — GRAPHIQUE DE PROGRESSION PAR ÉLÈVE
+// ================================================================
+let CHART_TYPE = 'line'; // 'line' | 'bar' | 'radar'
+
+function renderGraph(){
+  const el=S.eleve;
+  const evals=DB.getEvals().filter(e=>e.eleveId===el.id);
+  const pane=$('pane-GRAPH');
+
+  function buildSeries(ep){
+    const epEvs=evals.filter(e=>e.epreuve===ep);
+    const tps=uniq(epEvs.map(e=>e.numTP)).sort((a,b)=>parseInt(a)-parseInt(b));
+    return tps.map(numTP=>{
+      const rows=epEvs.filter(e=>e.numTP===numTP);
+      const nomTP=rows[0]?.nomTP||'';
+      return{tp:'TP'+numTP,note:avg(rows.map(e=>e.note)),pfmp:rows[0]?.pfmp||'',nomTP};
+    });
+  }
+
+  const s31=buildSeries('E31'), s32=buildSeries('E32');
+  const allSeries=[...s31,...s32];
+
+  if(!allSeries.length){
+    pane.innerHTML=`<div class="chart-card"><div class="chart-empty">📊 Aucune évaluation à afficher pour le moment.</div></div>`;
+    return;
+  }
+
+  // Boutons de sélection du type
+  const toggleHTML=`
+    <div style="display:flex;gap:6px;margin-left:auto;flex-wrap:wrap">
+      ${['line','bar','radar'].map(t=>{
+        const labels={line:'↗ Linéaire',bar:'▮▮ Bâtons',radar:'⬡ Araignée'};
+        const active=CHART_TYPE===t;
+        return `<button onclick="CHART_TYPE='${t}';renderGraph()"
+          style="padding:4px 12px;border-radius:4px;border:1.5px solid var(--p);font-size:.75rem;
+                 font-weight:700;cursor:pointer;font-family:var(--font);
+                 background:${active?'var(--p)':'#fff'};color:${active?'#fff':'var(--p)'}">
+          ${labels[t]}
+        </button>`;
+      }).join('')}
+    </div>`;
+
+  let svgContent='';
+  let svgViewBox='';
+  let legendExtra='';
+
+  // ════════════════════════════════════════
+  // GRAPHIQUE LINÉAIRE
+  // ════════════════════════════════════════
+  if(CHART_TYPE==='line'||CHART_TYPE==='bar'){
+    const W=720, H=280, PAD={t:20,r:24,b:50,l:48};
+    const cW=W-PAD.l-PAD.r, cH=H-PAD.t-PAD.b;
+    const allTPs=uniq(allSeries.map(p=>p.tp)).sort((a,b)=>parseInt(a.replace('TP',''))-parseInt(b.replace('TP','')));
+    function yPos(n){ return PAD.t+cH-(n/20)*cH; }
+    svgViewBox=`0 0 ${W} ${H}`;
+    let svg='';
+
+    const zones=[{min:15,max:20,c:'#e0f2fe'},{min:10,max:15,c:'#def7ec'},{min:5,max:10,c:'#fef3c7'},{min:0,max:5,c:'#fde8e8'}];
+    zones.forEach(z=>{ svg+=`<rect x="${PAD.l}" y="${yPos(z.max)}" width="${cW}" height="${yPos(z.min)-yPos(z.max)}" fill="${z.c}" opacity="0.35"/>`; });
+    [0,5,10,15,20].forEach(v=>{
+      const y=yPos(v);
+      svg+=`<line x1="${PAD.l}" y1="${y}" x2="${W-PAD.r}" y2="${y}" stroke="#e5e7eb" stroke-width="1"/>
+        <text x="${PAD.l-6}" y="${y+4}" text-anchor="end" font-size="10" fill="#9ca3af">${v}</text>`;
+    });
+    svg+=`<line x1="${PAD.l}" y1="${yPos(10)}" x2="${W-PAD.r}" y2="${yPos(10)}" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+
+    if(CHART_TYPE==='line'){
+      const xStep=allTPs.length>1?cW/(allTPs.length-1):cW/2;
+      function xPos(tp){ const i=allTPs.indexOf(tp); return PAD.l+(allTPs.length>1?i*xStep:cW/2); }
+      function drawLine(series,color,dash=''){
+        if(!series.length) return;
+        if(series.length>1){ const pts=series.map(p=>`${xPos(p.tp)},${yPos(p.note)}`).join(' '); svg+=`<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-dasharray="${dash}" stroke-linejoin="round"/>`; }
+        series.forEach(p=>{
+          const x=xPos(p.tp), y=yPos(p.note);
+          const isPFMP=p.pfmp&&p.pfmp.startsWith('PFMP');
+          svg+=isPFMP?`<polygon points="${x},${y-7} ${x+6},${y+4} ${x-6},${y+4}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`:`<circle cx="${x}" cy="${y}" r="5" fill="${color}" stroke="#fff" stroke-width="2"/>`;
+          svg+=`<title>${p.tp}${p.nomTP?' — '+p.nomTP:''} : ${p.note.toFixed(1)}/20${p.pfmp?' ('+p.pfmp+')':''}</title>`;
+          svg+=`<text x="${x}" y="${y-10}" text-anchor="middle" font-size="10" font-weight="700" fill="${color}">${p.note.toFixed(1)}</text>`;
+        });
+      }
+      drawLine(s31,'#1a56db'); drawLine(s32,'#7e3af2','6,3');
+      allTPs.forEach(tp=>{ svg+=`<text x="${xPos(tp)}" y="${H-PAD.b+16}" text-anchor="middle" font-size="10" fill="#6b7280">${tp}</text>`; });
+    } else {
+      const nG=allTPs.length, gW=cW/nG, bW=Math.min(22,gW*0.35), gap=4;
+      allTPs.forEach((tp,gi)=>{
+        const gx=PAD.l+gi*gW, cx=gx+gW/2;
+        const p31=s31.find(p=>p.tp===tp);
+        if(p31){ const bh=(p31.note/20)*cH,by=PAD.t+cH-bh,bx=cx-bW-gap/2; svg+=`<rect x="${bx}" y="${by}" width="${bW}" height="${bh}" fill="#1a56db" rx="3" opacity="${p31.pfmp.startsWith('PFMP')?'.65':'1'}"/><title>E31 ${p31.tp}${p31.nomTP?' — '+p31.nomTP:''} : ${p31.note.toFixed(1)}/20</title><text x="${bx+bW/2}" y="${by-4}" text-anchor="middle" font-size="9" font-weight="700" fill="#1a56db">${p31.note.toFixed(1)}</text>`; }
+        const p32=s32.find(p=>p.tp===tp);
+        if(p32){ const bh=(p32.note/20)*cH,by=PAD.t+cH-bh,bx=cx+gap/2; svg+=`<rect x="${bx}" y="${by}" width="${bW}" height="${bh}" fill="#7e3af2" rx="3" opacity="${p32.pfmp.startsWith('PFMP')?'.65':'1'}"/><title>E32 ${p32.tp}${p32.nomTP?' — '+p32.nomTP:''} : ${p32.note.toFixed(1)}/20</title><text x="${bx+bW/2}" y="${by-4}" text-anchor="middle" font-size="9" font-weight="700" fill="#7e3af2">${p32.note.toFixed(1)}</text>`; }
+        svg+=`<text x="${cx}" y="${H-PAD.b+16}" text-anchor="middle" font-size="10" fill="#6b7280">${tp}</text>`;
+      });
+    }
+    svgContent=svg;
+    legendExtra=`<div class="legend-item" style="opacity:.65"><div class="legend-dot" style="background:#888"></div> Opacité réduite = PFMP</div>`;
+
+  // ════════════════════════════════════════
+  // GRAPHIQUE TOILE D'ARAIGNÉE (RADAR)
+  // ════════════════════════════════════════
+  } else {
+    // Axes = toutes les méta-compétences E31 + E32
+    const axes = [
+      ...REF.E31.mcs.map(mc=>({id:mc.id, ep:'E31', label:mc.nom, shortLabel:mc.nom.length>28?mc.nom.slice(0,26)+'…':mc.nom})),
+      ...REF.E32.mcs.map(mc=>({id:mc.id, ep:'E32', label:mc.nom, shortLabel:mc.nom.length>28?mc.nom.slice(0,26)+'…':mc.nom}))
+    ];
+    const N=axes.length; // 7 axes
+    const CX=360, CY=240, R=160;
+    svgViewBox=`0 0 720 480`;
+
+    function radarPoint(i, val, maxVal=20){
+      const angle=(2*Math.PI*i/N) - Math.PI/2;
+      const r=(val/maxVal)*R;
+      return { x: CX+r*Math.cos(angle), y: CY+r*Math.sin(angle) };
+    }
+    function radarAngle(i){ return (2*Math.PI*i/N)-Math.PI/2; }
+
+    let svg='';
+
+    // Cercles de fond (niveaux)
+    const bgLevels=[{v:5,c:'#fde8e8'},{v:10,c:'#fef3c7'},{v:15,c:'#def7ec'},{v:20,c:'#e0f2fe'}];
+    bgLevels.forEach(({v,c})=>{
+      const pts=axes.map((_,i)=>{ const p=radarPoint(i,v); return `${p.x},${p.y}`; }).join(' ');
+      svg+=`<polygon points="${pts}" fill="${c}" stroke="#e5e7eb" stroke-width="1" opacity="0.7"/>`;
+    });
+
+    // Lignes des axes
+    axes.forEach((_,i)=>{
+      const p=radarPoint(i,20);
+      svg+=`<line x1="${CX}" y1="${CY}" x2="${p.x}" y2="${p.y}" stroke="#e5e7eb" stroke-width="1.5"/>`;
+    });
+
+    // Étiquettes des niveaux sur l'axe vertical
+    [5,10,15,20].forEach(v=>{
+      const p=radarPoint(0,v);
+      svg+=`<text x="${p.x+5}" y="${p.y}" font-size="9" fill="#94A3B8" font-weight="600">${v}</text>`;
+    });
+
+    // Calculer les valeurs par méta-compétence
+    function mcAvg(mcId){
+      const rows=evals.filter(e=>e.metaCompId===mcId);
+      return rows.length?avg(rows.map(e=>e.note)):0;
+    }
+
+    const vals=axes.map(ax=>mcAvg(ax.id));
+    const hasAny=vals.some(v=>v>0);
+
+    // Polygone de données
+    if(hasAny){
+      const ptsFill=axes.map((_,i)=>{ const p=radarPoint(i,vals[i]); return `${p.x},${p.y}`; }).join(' ');
+      // Couleur selon classe active
+      const g=S.currentGroupe;
+      const col=g===2?'#059669':g===3?'#7C3AED':'#2563EB';
+      const colLight=g===2?'rgba(5,150,105,.15)':g===3?'rgba(124,58,237,.15)':'rgba(37,99,235,.15)';
+      svg+=`<polygon points="${ptsFill}" fill="${colLight}" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>`;
+      // Points avec tooltip
+      axes.forEach((ax,i)=>{
+        if(vals[i]>0){
+          const p=radarPoint(i,vals[i]);
+          const epCol=ax.ep==='E31'?'#2563EB':'#7C3AED';
+          svg+=`<circle cx="${p.x}" cy="${p.y}" r="5" fill="${epCol}" stroke="#fff" stroke-width="2"><title>${ax.label} : ${vals[i].toFixed(1)}/20</title></circle>`;
+          svg+=`<text x="${p.x}" y="${p.y}-12}" text-anchor="middle" font-size="9" font-weight="700" fill="${epCol}">${vals[i].toFixed(1)}</text>`;
+        }
+      });
+    } else {
+      svg+=`<text x="${CX}" y="${CY+6}" text-anchor="middle" font-size="13" fill="#94A3B8">Aucune évaluation</text>`;
+    }
+
+    // Étiquettes des axes (à l'extérieur)
+    axes.forEach((ax,i)=>{
+      const angle=radarAngle(i);
+      const labelR=R+28;
+      const lx=CX+labelR*Math.cos(angle);
+      const ly=CY+labelR*Math.sin(angle);
+      const anchor=Math.cos(angle)>0.1?'start':Math.cos(angle)<-0.1?'end':'middle';
+      const epCol=ax.ep==='E31'?'#2563EB':'#7C3AED';
+      const epLabel=ax.ep==='E31'?'E31':'E32';
+      // Étiquette courte + badge épreuve
+      const lines=ax.shortLabel.match(/.{1,22}(\s|$)/g)||[ax.shortLabel];
+      let labelSvg='';
+      lines.forEach((line,li)=>{
+        labelSvg+=`<tspan x="${lx}" dy="${li===0?0:13}" text-anchor="${anchor}">${line.trim()}</tspan>`;
+      });
+      svg+=`<text font-size="10" font-weight="600" fill="#475569" text-anchor="${anchor}" x="${lx}" y="${ly-6*(lines.length-1)}">${labelSvg}</text>`;
+      svg+=`<text x="${lx}" y="${ly+7*(lines.length)}" text-anchor="${anchor}" font-size="9" font-weight="800" fill="${epCol}">[${epLabel}]</text>`;
+    });
+
+    svgContent=svg;
+    legendExtra=`
+      <div class="legend-item"><div class="legend-dot" style="background:#2563EB"></div> Méta-compétences E31</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#7C3AED"></div> Méta-compétences E32</div>`;
+  }
+
+  // ---- RENDU FINAL ----
+  pane.innerHTML=`
+    <div class="chart-card">
+      <h4 style="display:flex;align-items:center;flex-wrap:wrap;gap:8px">
+        📊 ${CHART_TYPE==='radar'?'Profil de compétences — toile d\'araignée':'Évolution des notes au fil des TP'}
+        <span style="font-size:.72rem;font-weight:400;color:var(--text3)">Survolez un point pour le détail</span>
+        ${toggleHTML}
+      </h4>
+      <div class="chart-legend">
+        ${CHART_TYPE!=='radar'?`
+          <div class="legend-item"><div class="legend-dot" style="background:#1a56db"></div> E31 — Vente-conseil</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#7e3af2"></div> E32 — Suivi des ventes</div>`:''}
+        ${legendExtra}
+      </div>
+      <div style="overflow-x:auto">
+        <svg viewBox="${svgViewBox}" class="chart-svg" style="min-width:${CHART_TYPE==='radar'?'380':'380'}px">${svgContent}</svg>
+      </div>
+    </div>
+    ${CHART_TYPE!=='radar'?`
+    ${s31.length?`<div class="chart-card" style="padding:12px 18px">
+      <div style="font-size:.82rem;font-weight:700;color:var(--p);margin-bottom:6px">E31 — Vente-conseil</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${s31.map(p=>`<span class="badge ${sc(p.note)}" style="font-family:var(--mono)" title="${p.nomTP||''}">${p.tp}${p.nomTP?' : '+p.nomTP.slice(0,20)+(p.nomTP.length>20?'…':''):''} — ${p.note.toFixed(1)}</span>`).join('')}
+        ${s31.length>1?`<span class="badge" style="background:var(--p-l);color:var(--p)">Moy. ${avg(s31.map(p=>p.note)).toFixed(1)}/20</span>`:''}
+      </div>
+    </div>`:''}
+    ${s32.length?`<div class="chart-card" style="padding:12px 18px">
+      <div style="font-size:.82rem;font-weight:700;color:var(--violet);margin-bottom:6px">E32 — Suivi des ventes</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${s32.map(p=>`<span class="badge ${sc(p.note)}" style="font-family:var(--mono)" title="${p.nomTP||''}">${p.tp}${p.nomTP?' : '+p.nomTP.slice(0,20)+(p.nomTP.length>20?'…':''):''} — ${p.note.toFixed(1)}</span>`).join('')}
+        ${s32.length>1?`<span class="badge" style="background:var(--violet-l);color:var(--violet)">Moy. ${avg(s32.map(p=>p.note)).toFixed(1)}/20</span>`:''}
+      </div>
+    </div>`:''}`:``}`;
+}
+
+// ================================================================
+// P6 — SAISIE GROUPÉE
+// ================================================================
+let GRP={ comps:[], ep:'E31' };
+
+function openGroupeSaisie(){
+  const eleves=DB.getEleves().filter(el=>(el.nom||'').trim()||(el.prenom||'').trim());
+  if(!eleves.length){ toast('Aucun élève dans la liste','err'); return; }
+  GRP={ comps:[], ep:'E31' };
+
+  const gn=$('g-num'); gn.innerHTML='';
+  for(let i=1;i<=20;i++){ const o=document.createElement('option'); o.value=i; o.textContent='TP '+i; gn.appendChild(o); }
+
+  $('grp-s1').classList.add('on'); $('grp-s2').classList.remove('on');
+  renderGrpMC();   // calcule aussi le prochain TP via updateGrpNextTP()
+  $('modal-groupe').classList.add('on');
+}
+
+/** Recalcule et pré-sélectionne le prochain numéro de TP pour l'épreuve choisie en saisie groupée. */
+function updateGrpNextTP(){
+  const ep=$('g-ep')?.value||'E31';
+  const allEvals=DB.getEvals().filter(e=>e.epreuve===ep);
+  const usedTPs=uniq(allEvals.map(e=>parseInt(e.numTP)));
+  let nextTP=1;
+  if(usedTPs.length>0) nextTP=Math.min(Math.max(...usedTPs)+1, 20);
+  const sel=$('g-num');
+  if(sel) sel.value=nextTP;
+}
+
+function closeGroupe(){ $('modal-groupe').classList.remove('on'); }
+
+function renderGrpMC(){
+  const ep=$('g-ep')?.value||'E31';
+  GRP.ep=ep; GRP.comps=[];
+  updateGrpNextTP(); // ← recalcule le prochain TP selon l'épreuve sélectionnée
+  const ref=REF[ep];
+  $('grp-mc-list').innerHTML=ref.mcs.map(mc=>`
+    <div style="margin-bottom:12px;border:1px solid var(--border);border-radius:6px;overflow:hidden">
+      <div style="font-size:.82rem;font-weight:800;padding:8px 14px;background:#f3f4f6;
+                  border-bottom:1px solid var(--border);color:var(--text)">
+        ${esc(mc.nom)}
+      </div>
+      ${mc.comps.map(c=>`
+        <label id="gci-${c.id}"
+          style="display:flex;align-items:flex-start;gap:12px;padding:9px 14px;
+                 border-bottom:1px solid #f0f0f0;cursor:pointer;background:#fff;
+                 transition:background .15s;box-sizing:border-box;width:100%">
+          <input type="checkbox" id="gcb-${c.id}"
+            style="accent-color:var(--p);margin-top:3px;flex-shrink:0;
+                   width:16px;height:16px;cursor:pointer"
+            onchange="toggleGrpCompCB('${c.id}','${mc.id}','${mc.nom.replace(/\'/g,"\\'").replace(/"/g,'&quot;')}')">
+          <span style="font-size:.83rem;line-height:1.55;flex:1;min-width:0;word-break:break-word">
+            ${esc(c.txt)}
+          </span>
+        </label>`).join('')}
+    </div>`).join('');
+}
+
+function toggleGrpCompCB(compId, mcId, mcNom){
+  const cb=$('gcb-'+compId);
+  const row=$('gci-'+compId);
+  if(row) row.style.background=cb.checked?'var(--p-l)':'#fff';
+  const comp=REF[GRP.ep].mcs.flatMap(m=>m.comps).find(c=>c.id===compId);
+  if(!comp) return;
+  if(cb.checked) GRP.comps.push({compId,mcId,mcNom,compTxt:comp.txt});
+  else GRP.comps=GRP.comps.filter(c=>c.compId!==compId);
+}
+
+function grpBack(){ $('grp-s1').classList.add('on'); $('grp-s2').classList.remove('on'); }
+
+function grpGoStep2(){
+  if(!GRP.comps.length){ toast('Cochez au moins une compétence','err'); return; }
+  const eleves=DB.getEleves().filter(el=>(el.nom||'').trim()||(el.prenom||'').trim());
+  const numTP=$('g-num').value;
+  $('grp-progress').textContent=`TP${numTP} · ${GRP.ep} · ${GRP.comps.length} compétence${GRP.comps.length>1?'s':''} · ${eleves.length} élèves à noter`;
+
+  // Construire la table
+  const header=`<thead><tr>
+    <th class="stu-col">Élève</th>
+    ${GRP.comps.map(c=>`<th style="min-width:170px;font-size:.72rem">${esc(c.compTxt.length>45?c.compTxt.slice(0,42)+'…':c.compTxt)}</th>`).join('')}
+  </tr></thead>`;
+
+  const body=eleves.map((el,i)=>`
+    <tr>
+      <td class="stu-col">${esc(lbl(el))}</td>
+      ${GRP.comps.map(c=>`
+        <td>
+          <div class="grp-niv" id="gniv-${i}-${c.compId}">
+            ${Object.entries(NIVEAUX).map(([k,n])=>`
+              <button class="grp-niv-btn ${n.cls}" onclick="grpSelNiv(${i},'${c.compId}','${k}','${el.id}')"
+                      id="gnb-${i}-${c.compId}-${k}">${n.lbl.split(' ')[0]}</button>`).join('')}
+          </div>
+          <div class="grp-slider-wrap" id="gslider-${i}-${c.compId}" style="display:none">
+            <input type="range" min="0" max="5" step="0.5" value="2.5"
+                   id="grng-${i}-${c.compId}" oninput="grpSlide(${i},'${c.compId}',this.value)">
+            <span class="grp-note-disp" id="gnd-${i}-${c.compId}">2.5</span>
+          </div>
+        </td>`).join('')}
+    </tr>`).join('');
+
+  $('grp-table').innerHTML=header+'<tbody>'+body+'</tbody>';
+  // Stocker les élèves pour la sauvegarde
+  GRP.eleves=eleves;
+  GRP.elevesNiv={};
+  GRP.elevesNotes={};
+  eleves.forEach((el,i)=>{ GRP.comps.forEach(c=>{ GRP.elevesNiv[`${i}-${c.compId}`]=null; GRP.elevesNotes[`${i}-${c.compId}`]=null; }); });
+
+  $('grp-s1').classList.remove('on'); $('grp-s2').classList.add('on');
+}
+
+function grpSelNiv(i, compId, key, eleveId){
+  const niv=NIVEAUX[key];
+  Object.keys(NIVEAUX).forEach(k=>{
+    const btn=$(`gnb-${i}-${compId}-${k}`);
+    if(btn) btn.classList.toggle('on', k===key);
+  });
+  const slider=$(`grng-${i}-${compId}`);
+  const wrap=$(`gslider-${i}-${compId}`);
+  if(slider&&wrap){
+    slider.min=niv.min; slider.max=niv.max; slider.step=0.5; slider.value=niv.def;
+    $(`gnd-${i}-${compId}`).textContent=niv.def.toFixed(1);
+    wrap.style.display='flex';
+    GRP.elevesNiv[`${i}-${compId}`]=key;
+    GRP.elevesNotes[`${i}-${compId}`]=niv.def;
+  }
+}
+
+function grpSlide(i, compId, val){
+  GRP.elevesNotes[`${i}-${compId}`]=parseFloat(val);
+  $(`gnd-${i}-${compId}`).textContent=parseFloat(val).toFixed(1);
+}
+
+async function grpSave(){
+  const numTP=String($('g-num').value);
+  const nomTP=($('g-nom').value||'').trim();
+  const classe=$('g-classe').value;
+  const pfmp=$('g-pfmp').value;
+  const ens=getTeacher();
+  let saved=0, skipped=0;
+
+  closeGroupe();
+  loading(true,'Enregistrement groupé…');
+
+  const promises=GRP.eleves.map(async (el,i)=>{
+    const evsForEleve=GRP.comps.map(c=>{
+      const key=`${i}-${c.compId}`;
+      const nivKey=GRP.elevesNiv[key];
+      if(!nivKey) return null;
+      return{metaCompId:c.mcId,metaCompNom:c.mcNom,competence:c.compTxt,
+             niveauMaitrise:NIVEAUX[nivKey].lbl,note:GRP.elevesNotes[key]};
+    }).filter(Boolean);
+    if(evsForEleve.length>0){
+      await DB.saveTP({eleveId:el.id,numTP,nomTP,classe,pfmp,epreuve:GRP.ep,isEdit:false,enseignant:ens,evaluations:evsForEleve});
+      saved++;
+    } else skipped++;
+  });
+
+  await Promise.all(promises);
+  // Synchronisation automatique après enregistrement groupé
+  loading(true,'Synchronisation…');
+  await DB.loadAll();
+  renderDash($('search').value||'');
+  loading(false);
+  toast(`TP${numTP} enregistré pour ${saved} élève${saved>1?'s':''}${skipped?' ('+skipped+' sans évaluation)':''}  ✓`,'ok');
+}
+
+// ================================================================
+// P8 — VUE SIMPLIFIÉE ÉLÈVE / PARENTS
+// ================================================================
+function openEleveView(){
+  const el=S.eleve;
+  const evals=DB.getEvals().filter(e=>e.eleveId===el.id);
+  const now=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+
+  $('ev-name').textContent=lbl(el);
+  $('ev-sub').textContent=(el.classe||'')+(el.classe?' · ':'')+now;
+
+  // Calcul moyennes
+  const e31=evals.filter(e=>e.epreuve==='E31');
+  const e32=evals.filter(e=>e.epreuve==='E32');
+  const a31=e31.length?avg(e31.map(e=>e.note)):null;
+  const a32=e32.length?avg(e32.map(e=>e.note)):null;
+
+  // Message d'encouragement
+  const moyGlobal=(a31!==null&&a32!==null)?((a31*3+a32*2)/5):(a31??a32);
+  let encouragement='';
+  if(moyGlobal===null) encouragement='Les premières évaluations ne sont pas encore disponibles.';
+  else if(moyGlobal<5)  encouragement='Des difficultés sont identifiées. Un travail régulier et des échanges avec l\'enseignant permettront de progresser.';
+  else if(moyGlobal<10) encouragement='Des bases sont en cours d\'acquisition. Continuez vos efforts, la progression est possible avec de la persévérance !';
+  else if(moyGlobal<15) encouragement='Bon travail ! Les compétences professionnelles sont en bonne voie d\'acquisition. Continuez sur cette lancée.';
+  else encouragement='Excellente maîtrise des compétences professionnelles ! Votre investissement porte ses fruits.';
+
+  // Couverture du référentiel par épreuve
+  function epSection(ep){
+    const ref=REF[ep];
+    const epEvs=evals.filter(e=>e.epreuve===ep);
+    const isV=ep==='E32';
+    const moy=epEvs.length?avg(epEvs.map(e=>e.note)):null;
+    const covered=ref.mcs.flatMap(m=>m.comps).filter(c=>epEvs.some(e=>e.competence===c.txt)).length;
+    const total=ref.mcs.flatMap(m=>m.comps).length;
+
+    let html=`<div class="eleve-ep-section">
+      <div class="eleve-ep-title ${isV?'v':''}">${ref.badge}
+        <span class="badge ${isV?'badge-e32':'badge-e31'}">${covered}/${total} compétences</span>
+      </div>
+      <div class="eleve-moy-box ${moy!==null?sc(moy):''}" style="max-width:180px">
+        <div class="eleve-moy-val">${moy!==null?moy.toFixed(1)+' /20':'—'}</div>
+        <div class="eleve-moy-lbl">Moyenne ${ep}</div>
+      </div>`;
+
+    ref.mcs.forEach(mc=>{
+      const mcEvs=epEvs.filter(e=>e.metaCompId===mc.id);
+      if(!mcEvs.length) return;
+      html+=`<div style="font-size:.78rem;font-weight:800;color:var(--text2);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.4px">${esc(mc.nom)}</div>`;
+      mc.comps.forEach(c=>{
+        const cEvs=mcEvs.filter(e=>e.competence===c.txt);
+        if(!cEvs.length) return;
+        const an=avg(cEvs.map(e=>e.note));
+        const barColor=an<5?'#ef4444':an<10?'#f59e0b':an<15?'#10b981':'#06b6d4';
+        html+=`<div class="eleve-comp-row">
+          <div class="eleve-comp-lbl">${esc(c.txt)}</div>
+          <div class="eleve-comp-bar-wrap">
+            <div class="eleve-comp-bar-bg">
+              <div class="eleve-comp-bar-fill" style="width:${(an/20)*100}%;background:${barColor}"></div>
+            </div>
+          </div>
+          <div class="eleve-comp-note ${sc(an)}">${an.toFixed(1)}</div>
+        </div>`;
+      });
+    });
+    html+='</div>';
+    return html;
+  }
+
+  $('ev-body').innerHTML=`
+    <div class="eleve-encouragement">💬 ${encouragement}</div>
+    ${epSection('E31')}
+    ${epSection('E32')}
+    ${evals.length===0?'<div class="empty-state"><div class="ico">📋</div>Aucune évaluation enregistrée pour le moment.</div>':''}
+    <div style="font-size:.72rem;color:var(--text3);text-align:center;margin-top:20px;padding-top:14px;border-top:1px solid var(--border)">
+      Document produit par l'outil Suivi Compétences MCV — Outil créé par Olivier NUGUET · Région académique Guyane
+    </div>`;
+
+  $('modal-eleve-view').classList.add('on');
+}
+
+function closeEleveView(){ $('modal-eleve-view').classList.remove('on'); }
+
+function printEleveView(){
+  const content=$('ev-body').innerHTML;
+  const name=$('ev-name').textContent;
+  const sub=$('ev-sub').textContent;
+  const w=window.open('','_blank','width=700,height=800');
+  w.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+    <title>Bilan élève — ${name}</title>
+    <style>
+      body{font-family:'Segoe UI',Arial,sans-serif;padding:24px;color:#111;font-size:13px}
+      @media print{body{padding:8mm} @page{margin:12mm}}
+      .eleve-ep-section{margin-bottom:20px}
+      .eleve-ep-title{font-size:.9rem;font-weight:800;display:flex;align-items:center;gap:8px;color:#1a56db;margin-bottom:10px}
+      .eleve-ep-title.v{color:#7e3af2}
+      .badge{display:inline-flex;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:700}
+      .badge-e31{background:#ebf5ff;color:#1a56db} .badge-e32{background:#edebfe;color:#7e3af2}
+      .eleve-moy-box{border-radius:6px;padding:10px 14px;text-align:center;margin-bottom:10px;max-width:180px}
+      .eleve-moy-val{font-size:2rem;font-weight:800} .eleve-moy-lbl{font-size:.72rem;font-weight:600}
+      .sc0{background:#fde8e8;color:#C62828} .sc1{background:#fef3c7;color:#d97706}
+      .sc2{background:#def7ec;color:#057a55} .sc3{background:#e0f2fe;color:#0891b2}
+      .eleve-comp-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+      .eleve-comp-lbl{font-size:.78rem;flex:1;line-height:1.4}
+      .eleve-comp-bar-wrap{width:100px;flex-shrink:0}
+      .eleve-comp-bar-bg{height:7px;background:#e5e7eb;border-radius:4px;overflow:hidden}
+      .eleve-comp-bar-fill{height:100%;border-radius:4px}
+      .eleve-comp-note{font-size:.78rem;font-weight:800;min-width:32px;text-align:right}
+      .eleve-encouragement{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:10px 14px;font-size:.83rem;color:#166534;margin-bottom:16px;line-height:1.6}
+    </style></head><body>
+    <div style="background:#1a56db;color:#fff;padding:16px 20px;border-radius:8px;margin-bottom:18px">
+      <div style="font-size:1.2rem;font-weight:800">${esc(name)}</div>
+      <div style="font-size:.8rem;opacity:.8;margin-top:3px">${esc(sub)}</div>
+    </div>
+    ${content}
+    </body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(), 400);
+}
+
+// ================================================================
+// EXPORT PDF BILAN CLASSE
+// ================================================================
+function exportClassePDF(){
+  const g=S.currentGroupe;
+  const nomClasse=getClasseName(g);
+  const eleves=DB.getEleves(g).filter(el=>(el.nom||'').trim()||(el.prenom||'').trim());
+  const evals=DB.getEvals(g);
+  const now=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+  const ens=getTeacher();
+
+  // Calculs globaux
+  const notedE31=eleves.filter(el=>evals.some(e=>e.eleveId===el.id&&e.epreuve==='E31'));
+  const notedE32=eleves.filter(el=>evals.some(e=>e.eleveId===el.id&&e.epreuve==='E32'));
+
+  function eleveAvg(el,ep){
+    const rows=evals.filter(e=>e.eleveId===el.id&&e.epreuve===ep);
+    return rows.length?avg(rows.map(e=>e.note)):null;
+  }
+  function eleveTP(el,ep){
+    return uniq(evals.filter(e=>e.eleveId===el.id&&e.epreuve===ep).map(e=>e.numTP)).length;
+  }
+
+  // Couleur selon note
+  function noteColor(n){
+    if(n===null) return '#9ca3af';
+    if(n<5)  return '#C62828';
+    if(n<10) return '#d97706';
+    if(n<15) return '#057a55';
+    return '#0891b2';
+  }
+  function noteBg(n){
+    if(n===null) return '#f3f4f6';
+    if(n<5)  return '#fde8e8';
+    if(n<10) return '#fef3c7';
+    if(n<15) return '#def7ec';
+    return '#e0f2fe';
+  }
+  function niveauLabel(n){
+    if(n===null) return '—';
+    if(n<5)  return 'Maîtrise insuffisante';
+    if(n<10) return 'Maîtrise fragile';
+    if(n<15) return 'Maîtrise satisfaisante';
+    return 'Très bonne maîtrise';
+  }
+
+  // Lignes du tableau
+  const rows=eleves.map((el,i)=>{
+    const a31=eleveAvg(el,'E31'), a32=eleveAvg(el,'E32');
+    const tp31=eleveTP(el,'E31'), tp32=eleveTP(el,'E32');
+    const moy=(a31!==null&&a32!==null)?((a31*3+a32*2)/5):null; // pondération coeff E31×3, E32×2
+    return{el,a31,a32,tp31,tp32,moy,rank:i+1};
+  });
+
+  // Moyennes de classe
+  const classA31=rows.filter(r=>r.a31!==null);
+  const classA32=rows.filter(r=>r.a32!==null);
+  const moyClasse31=classA31.length?avg(classA31.map(r=>r.a31)):null;
+  const moyClasse32=classA32.length?avg(classA32.map(r=>r.a32)):null;
+
+  // Distribution niveaux E31
+  function distrib(ep){
+    const d={insuf:0,frag:0,sati:0,tbon:0,nr:0};
+    eleves.forEach(el=>{
+      const n=eleveAvg(el,ep);
+      if(n===null) d.nr++;
+      else if(n<5)  d.insuf++;
+      else if(n<10) d.frag++;
+      else if(n<15) d.sati++;
+      else d.tbon++;
+    });
+    return d;
+  }
+  const d31=distrib('E31'), d32=distrib('E32');
+  const total=eleves.length;
+
+  function pct(v){ return total?Math.round(v/total*100):0; }
+  function bar(v,color){ const w=pct(v); return `<div style="display:inline-block;width:${w}%;min-width:${v?2:0}px;height:10px;background:${color};border-radius:2px;vertical-align:middle"></div>`; }
+
+  const tableRows=rows.map((r,i)=>{
+    const bg=i%2===0?'#fff':'#f9fafb';
+    const c31=noteColor(r.a31), bg31=noteBg(r.a31);
+    const c32=noteColor(r.a32), bg32=noteBg(r.a32);
+    return `<tr style="background:${bg}">
+      <td style="padding:7px 10px;border-bottom:1px solid #eee;font-weight:700;color:#6b7280;font-size:11px;text-align:center">${r.rank}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid #eee;font-weight:700;font-size:12px">${esc(lbl(r.el))}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid #eee;font-size:11px;color:#6b7280">${esc(r.el.classe||'—')}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid #eee;text-align:center;font-size:11px;color:#6b7280">${r.tp31}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid #eee;text-align:center">
+        ${r.a31!==null?`<span style="background:${bg31};color:${c31};padding:3px 10px;border-radius:12px;font-weight:800;font-size:12px">${r.a31.toFixed(1)}</span>`:'<span style="color:#ccc;font-size:11px">—</span>'}
+      </td>
+      <td style="padding:7px 10px;border-bottom:1px solid #eee;font-size:10px;color:${c31}">${niveauLabel(r.a31)}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid #eee;text-align:center;font-size:11px;color:#6b7280">${r.tp32}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid #eee;text-align:center">
+        ${r.a32!==null?`<span style="background:${bg32};color:${c32};padding:3px 10px;border-radius:12px;font-weight:800;font-size:12px">${r.a32.toFixed(1)}</span>`:'<span style="color:#ccc;font-size:11px">—</span>'}
+      </td>
+      <td style="padding:7px 10px;border-bottom:1px solid #eee;font-size:10px;color:${c32}">${niveauLabel(r.a32)}</td>
+    </tr>`;
+  }).join('');
+
+  // Ligne moyenne de classe
+  const moyRow=`<tr style="background:#f0f4ff;font-weight:800;border-top:2px solid #1a56db">
+    <td colspan="3" style="padding:8px 10px;font-size:12px;color:#1a56db">📊 Moyenne de classe</td>
+    <td style="padding:8px 10px;text-align:center;font-size:11px;color:#6b7280">${classA31.length} élèves</td>
+    <td style="padding:8px 10px;text-align:center">
+      ${moyClasse31!==null?`<span style="background:${noteBg(moyClasse31)};color:${noteColor(moyClasse31)};padding:3px 10px;border-radius:12px;font-weight:800;font-size:12px">${moyClasse31.toFixed(1)}</span>`:'—'}
+    </td>
+    <td style="padding:8px 10px;font-size:10px;color:${noteColor(moyClasse31)}">${niveauLabel(moyClasse31)}</td>
+    <td style="padding:8px 10px;text-align:center;font-size:11px;color:#6b7280">${classA32.length} élèves</td>
+    <td style="padding:8px 10px;text-align:center">
+      ${moyClasse32!==null?`<span style="background:${noteBg(moyClasse32)};color:${noteColor(moyClasse32)};padding:3px 10px;border-radius:12px;font-weight:800;font-size:12px">${moyClasse32.toFixed(1)}</span>`:'—'}
+    </td>
+    <td style="padding:8px 10px;font-size:10px;color:${noteColor(moyClasse32)}">${niveauLabel(moyClasse32)}</td>
+  </tr>`;
+
+  function distribHTML(d,ep,col){
+    const items=[
+      {lbl:'Très bonne maîtrise',v:d.tbon,c:'#0891b2'},
+      {lbl:'Maîtrise satisfaisante',v:d.sati,c:'#057a55'},
+      {lbl:'Maîtrise fragile',v:d.frag,c:'#d97706'},
+      {lbl:'Maîtrise insuffisante',v:d.insuf,c:'#C62828'},
+      {lbl:'Non évalué',v:d.nr,c:'#d1d5db'},
+    ];
+    return `<div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px;flex:1">
+      <div style="font-size:12px;font-weight:800;color:${col};margin-bottom:10px">${ep}</div>
+      ${items.map(it=>`
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+          <div style="font-size:10px;color:#555;width:145px;flex-shrink:0">${it.lbl}</div>
+          <div style="flex:1;background:#f3f4f6;border-radius:3px;height:8px;overflow:hidden">
+            <div style="width:${pct(it.v)}%;height:100%;background:${it.c};border-radius:3px"></div>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:${it.c};min-width:36px;text-align:right">${it.v} (${pct(it.v)}%)</div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+  <title>Bilan ${esc(nomClasse)} — MCV E31/E32</title>
+  <style>
+    body{font-family:'Segoe UI',Arial,sans-serif;margin:0;padding:20px;color:#111;font-size:13px}
+    @media print{body{padding:0}.no-print{display:none} @page{margin:12mm;size:A4 landscape}}
+    table{border-collapse:collapse;width:100%}
+  </style></head><body>
+
+  <div class="no-print" style="background:#1a56db;color:#fff;padding:10px 16px;border-radius:6px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+    <span>📄 <strong>Ctrl+P</strong> → choisissez <em>Format A4 — Paysage</em> pour un meilleur rendu.</span>
+    <button onclick="window.print()" style="margin-left:auto;background:#fff;color:#1a56db;border:none;padding:6px 16px;border-radius:4px;font-weight:700;cursor:pointer">🖨️ Imprimer / PDF</button>
+    <button onclick="window.close()" style="background:rgba(255,255,255,.2);color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer">✕ Fermer</button>
+  </div>
+
+  <!-- EN-TÊTE -->
+  <div style="background:#1a56db;color:#fff;border-radius:8px;padding:16px 22px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div>
+      <div style="font-size:16px;font-weight:800">📊 Bilan — ${esc(nomClasse)} — BAC PRO MCV Option A</div>
+      <div style="font-size:11px;opacity:.8;margin-top:3px">Épreuves E31 (Vente-conseil) &amp; E32 (Suivi des ventes) · ${total} élèves · Édité le ${now}${ens?' · '+esc(ens):''}</div>
+    </div>
+    <div style="display:flex;gap:10px">
+      ${moyClasse31!==null?`<div style="background:rgba(255,255,255,.15);padding:8px 14px;border-radius:6px;text-align:center">
+        <div style="font-size:18px;font-weight:800">${moyClasse31.toFixed(1)}</div>
+        <div style="font-size:9px;opacity:.8;text-transform:uppercase;letter-spacing:.5px">Moy. E31 /20</div></div>`:''}
+      ${moyClasse32!==null?`<div style="background:rgba(255,255,255,.15);padding:8px 14px;border-radius:6px;text-align:center">
+        <div style="font-size:18px;font-weight:800">${moyClasse32.toFixed(1)}</div>
+        <div style="font-size:9px;opacity:.8;text-transform:uppercase;letter-spacing:.5px">Moy. E32 /20</div></div>`:''}
+    </div>
+  </div>
+
+  <!-- DISTRIBUTION -->
+  <div style="display:flex;gap:12px;margin-bottom:16px">
+    ${distribHTML(d31,'E31 — Vente-conseil (coeff. 3)','#1a56db')}
+    ${distribHTML(d32,'E32 — Suivi des ventes (coeff. 2)','#7e3af2')}
+  </div>
+
+  <!-- LÉGENDE -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;font-size:10px;align-items:center">
+    <span style="font-weight:700;color:#555">Légende :</span>
+    <span style="background:#fde8e8;color:#C62828;padding:2px 8px;border-radius:10px;font-weight:700">0–5 Maîtrise insuffisante</span>
+    <span style="background:#fef3c7;color:#d97706;padding:2px 8px;border-radius:10px;font-weight:700">5–10 Maîtrise fragile</span>
+    <span style="background:#def7ec;color:#057a55;padding:2px 8px;border-radius:10px;font-weight:700">10–15 Maîtrise satisfaisante</span>
+    <span style="background:#e0f2fe;color:#0891b2;padding:2px 8px;border-radius:10px;font-weight:700">15–20 Très bonne maîtrise</span>
+  </div>
+
+  <!-- TABLEAU -->
+  <table>
+    <thead>
+      <tr style="background:#1a56db;color:#fff">
+        <th style="padding:8px 10px;font-size:10px;text-align:center;width:28px">#</th>
+        <th style="padding:8px 10px;font-size:10px;text-align:left">Élève</th>
+        <th style="padding:8px 10px;font-size:10px;text-align:left">Classe</th>
+        <th colspan="3" style="padding:8px 10px;font-size:10px;text-align:center;border-left:2px solid rgba(255,255,255,.3)">
+          📋 E31 — Vente-conseil (coeff. 3)
+        </th>
+        <th colspan="3" style="padding:8px 10px;font-size:10px;text-align:center;border-left:2px solid rgba(255,255,255,.3)">
+          📋 E32 — Suivi des ventes (coeff. 2)
+        </th>
+      </tr>
+      <tr style="background:#1e429f;color:rgba(255,255,255,.8)">
+        <th></th><th></th><th></th>
+        <th style="padding:5px 10px;font-size:9px;text-align:center;border-left:2px solid rgba(255,255,255,.2)">TP</th>
+        <th style="padding:5px 10px;font-size:9px;text-align:center">Note</th>
+        <th style="padding:5px 10px;font-size:9px;text-align:left">Niveau</th>
+        <th style="padding:5px 10px;font-size:9px;text-align:center;border-left:2px solid rgba(255,255,255,.2)">TP</th>
+        <th style="padding:5px 10px;font-size:9px;text-align:center">Note</th>
+        <th style="padding:5px 10px;font-size:9px;text-align:left">Niveau</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${tableRows}
+      ${moyRow}
+    </tbody>
+  </table>
+
+  <div style="margin-top:12px;font-size:9px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:8px">
+    Outil créé par <strong style="color:#888">Olivier NUGUET</strong> &nbsp;·&nbsp; Région académique Guyane &nbsp;·&nbsp; BAC PRO MCV Option A — Suivi Compétences E31/E32
+  </div>
+  </body></html>`;
+
+  const w=window.open('','_blank','width=1100,height=750');
+  w.document.write(html);
+  w.document.close();
+}
+
+// ================================================================
+// EXPORT PDF PAR ÉLÈVE
+// ================================================================
+function exportPDF(){
+  const el=S.eleve;
+  const evals=DB.getEvals().filter(e=>e.eleveId===el.id);
+  const e31=evals.filter(e=>e.epreuve==='E31');
+  const e32=evals.filter(e=>e.epreuve==='E32');
+  const a31=e31.length?avg(e31.map(e=>e.note)):null;
+  const a32=e32.length?avg(e32.map(e=>e.note)):null;
+  const tps31=uniq(e31.map(e=>e.numTP)).sort((a,b)=>parseInt(a)-parseInt(b));
+  const tps32=uniq(e32.map(e=>e.numTP)).sort((a,b)=>parseInt(a)-parseInt(b));
+
+  function tpRows(tps, evs, ep){
+    return tps.map(numTP=>{
+      const rows=evs.filter(e=>e.numTP===numTP);
+      const note=avg(rows.map(e=>e.note));
+      const cls=rows[0]?.classe||'';
+      const nomTP=rows[0]?.nomTP||'';
+      const tpLabel=`TP${numTP}${nomTP?' — '+nomTP:''}`;
+      const mcs=uniq(rows.map(r=>r.metaCompNom));
+      const comps=rows.map(r=>`<tr><td style="padding:4px 8px;border-bottom:1px solid #eee;font-size:11px;color:#555">${r.metaCompNom}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #eee;font-size:11px">${r.competence}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #eee;font-size:11px;white-space:nowrap">${r.niveauMaitrise}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #eee;font-size:11px;text-align:center;font-weight:700">${r.note.toFixed(1)}</td></tr>`).join('');
+      const scColor=note<5?'#C62828':note<10?'#d97706':note<15?'#057a55':'#0891b2';
+      return `<div style="margin-bottom:14px;border:1px solid #ddd;border-radius:6px;overflow:hidden">
+        <div style="background:${ep==='E31'?'#1a56db':'#7e3af2'};color:#fff;padding:8px 12px;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-weight:700;font-size:12px">${tpLabel} — ${cls}</span>
+          <span style="font-weight:800;font-size:14px;background:rgba(255,255,255,.2);padding:2px 10px;border-radius:12px">${note.toFixed(1)}/20</span>
+        </div>
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr style="background:#f5f5f5">
+            <th style="padding:5px 8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#888">Méta-compétence</th>
+            <th style="padding:5px 8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#888">Compétence évaluée</th>
+            <th style="padding:5px 8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#888">Niveau</th>
+            <th style="padding:5px 8px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#888">Note</th>
+          </tr></thead>
+          <tbody>${comps}</tbody>
+        </table>
+      </div>`;
+    }).join('');
+  }
+
+  function covSection(ep){
+    const ref=REF[ep]; const epEvs=evals.filter(e=>e.epreuve===ep);
+    const isV=ep==='E32'; const col=isV?'#7e3af2':'#1a56db';
+    let html=`<h3 style="color:${col};font-size:13px;margin:16px 0 8px">${ref.badge}</h3>`;
+    ref.mcs.forEach(mc=>{
+      const mcEvs=epEvs.filter(e=>e.metaCompId===mc.id);
+      const cov=mc.comps.filter(c=>mcEvs.some(e=>e.competence===c.txt)).length;
+      html+=`<div style="font-size:11px;font-weight:700;background:#f0f0f0;padding:5px 8px;margin-bottom:4px;border-radius:4px">${mc.nom} (${cov}/${mc.comps.length})</div>`;
+      mc.comps.forEach(c=>{
+        const cEvs=mcEvs.filter(e=>e.competence===c.txt);
+        const done=cEvs.length>0;
+        const an=done?avg(cEvs.map(e=>e.note)):null;
+        const dot=done?(an<5?'🔴':an<10?'🟠':an<15?'🟡':'🟢'):'⚪';
+        html+=`<div style="display:flex;align-items:center;gap:6px;padding:3px 8px;font-size:10px;border-bottom:1px solid #eee">
+          <span>${dot}</span><span style="flex:1;color:#444">${c.txt}</span>
+          <span style="font-weight:700;color:${done?col:'#aaa'};min-width:30px;text-align:right">${done?an.toFixed(1):'—'}</span>
+        </div>`;
+      });
+    });
+    return html;
+  }
+
+  const now=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+  const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+  <title>Bilan ${lbl(el)}</title>
+  <style>
+    body{font-family:'Segoe UI',Arial,sans-serif;margin:0;padding:24px;color:#111;font-size:13px}
+    @media print{body{padding:0} .no-print{display:none} @page{margin:15mm}}
+  </style></head><body>
+  <div class="no-print" style="background:#1a56db;color:#fff;padding:10px 16px;border-radius:6px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+    <span>📄 Utilisez <strong>Ctrl+P</strong> (ou ⌘P sur Mac) pour imprimer ou exporter en PDF.</span>
+    <button onclick="window.print()" style="margin-left:auto;background:#fff;color:#1a56db;border:none;padding:6px 16px;border-radius:4px;font-weight:700;cursor:pointer">🖨️ Imprimer / PDF</button>
+    <button onclick="window.close()" style="background:rgba(255,255,255,.2);color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer">✕ Fermer</button>
+  </div>
+
+  <!-- EN-TÊTE -->
+  <div style="background:#1a56db;color:#fff;border-radius:8px;padding:18px 22px;margin-bottom:16px">
+    <div style="font-size:18px;font-weight:800">${lbl(el)}</div>
+    <div style="font-size:12px;opacity:.8;margin-top:3px">${el.classe||'—'} &nbsp;·&nbsp; Bilan généré le ${now}</div>
+    <div style="display:flex;gap:16px;margin-top:14px">
+      ${a31!==null?`<div style="background:rgba(255,255,255,.15);padding:8px 16px;border-radius:6px;text-align:center"><div style="font-size:20px;font-weight:800">${a31.toFixed(1)}</div><div style="font-size:10px;opacity:.8">Moy. E31 /20</div></div>`:''}
+      ${a32!==null?`<div style="background:rgba(255,255,255,.15);padding:8px 16px;border-radius:6px;text-align:center"><div style="font-size:20px;font-weight:800">${a32.toFixed(1)}</div><div style="font-size:10px;opacity:.8">Moy. E32 /20</div></div>`:''}
+      <div style="background:rgba(255,255,255,.15);padding:8px 16px;border-radius:6px;text-align:center"><div style="font-size:20px;font-weight:800">${tps31.length+tps32.length}</div><div style="font-size:10px;opacity:.8">Total TP</div></div>
+    </div>
+  </div>
+
+  <!-- COUVERTURE DU RÉFÉRENTIEL -->
+  <h2 style="font-size:14px;margin:0 0 6px;border-bottom:2px solid #1a56db;padding-bottom:4px">📈 Couverture du référentiel</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+    <div>${covSection('E31')}</div>
+    <div>${covSection('E32')}</div>
+  </div>
+
+  <!-- DÉTAIL DES TP E31 -->
+  ${tps31.length?`<h2 style="font-size:14px;margin:0 0 10px;border-bottom:2px solid #1a56db;padding-bottom:4px;color:#1a56db">📋 E31 — Vente-conseil (${tps31.length} TP)</h2>
+  ${tpRows(tps31,e31,'E31')}`:''}
+
+  <!-- DÉTAIL DES TP E32 -->
+  ${tps32.length?`<h2 style="font-size:14px;margin:16px 0 10px;border-bottom:2px solid #7e3af2;padding-bottom:4px;color:#7e3af2">📋 E32 — Suivi des ventes (${tps32.length} TP)</h2>
+  ${tpRows(tps32,e32,'E32')}`:''}
+
+  ${(!tps31.length&&!tps32.length)?'<p style="color:#999;text-align:center;padding:30px">Aucune évaluation enregistrée pour cet élève.</p>':''}
+
+  <div style="margin-top:16px;font-size:9px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:8px">
+    Outil créé par <strong style="color:#888">Olivier NUGUET</strong> &nbsp;·&nbsp; Région académique Guyane &nbsp;·&nbsp; BAC PRO MCV Option A — Suivi Compétences E31/E32
+  </div>
+  </body></html>`;
+
+  const w=window.open('','_blank','width=900,height=700');
+  w.document.write(html); w.document.close();
+}
+
+// ================================================================
+// SAVE / DELETE TP
+// ================================================================
+async function saveTP(){
+  const sel=Object.keys(S.F.comp).filter(k=>S.F.comp[k]);
+  if(!sel.length){ $('form-alert').innerHTML='<div class="alert alert-warn">⚠️ Sélectionnez au moins une compétence.</div>'; window.scrollTo({top:0,behavior:'smooth'}); return; }
+  const missing=sel.filter(id=>!S.F.niv[id]);
+  if(missing.length){ $('form-alert').innerHTML='<div class="alert alert-warn">⚠️ Définissez le niveau de maîtrise pour toutes les compétences sélectionnées.</div>'; window.scrollTo({top:0,behavior:'smooth'}); return; }
+
+  const ep=S.epreuve;
+  const numTP=String($('f-num').value);
+  const nomTP=($('f-nom').value||'').trim();
+  const classe=$('f-classe').value;
+  const pfmp=$('f-pfmp').value;
+  const ens=getTeacher();
+
+  const evaluations=sel.map(id=>{
+    const comp=allComps().find(c=>c.id===id);
+    const mc=allMCs().find(m=>m.comps.some(c=>c.id===id));
+    return{metaCompId:mc.id,metaCompNom:mc.nom,competence:comp.txt,
+           niveauMaitrise:NIVEAUX[S.F.niv[id]].lbl,note:S.F.notes[id]};
+  });
+
+  loading(true,'Enregistrement…');
+  await DB.saveTP({eleveId:S.eleve.id,numTP,nomTP,classe,pfmp,epreuve:ep,isEdit:S.isEdit,enseignant:ens,evaluations});
+
+  // Synchronisation automatique après enregistrement
+  loading(true,'Synchronisation…');
+  await DB.loadAll();
+
+  // Rafraîchir le profil
+  S.eleve=DB.getEleves().find(e=>e.id===S.eleve.id);
+  toast('TP'+numTP+' enregistré et synchronisé ✓','ok');
+  renderProfil();
+  showView('profil');
+  loading(false);
+}
+
+function editTP(numTP,ep){ goToForm(ep,numTP); }
+
+async function delTP(numTP,ep){
+  if(!confirm(`Supprimer TP${numTP} (${ep}) pour cet élève ?\nLes évaluations associées seront effacées.`)) return;
+  loading(true,'Suppression…');
+  await DB.deleteTP(S.eleve.id,numTP,ep);
+  toast('TP'+numTP+' supprimé','ok');
+  renderProfil();
+  loading(false);
+}
+
+// ================================================================
+// MODIFIER ÉLÈVE
+// ================================================================
+function openEditModal(){
+  const el=S.eleve;
+  $('e-prenom').value=el.prenom||''; $('e-nom').value=el.nom||''; $('e-classe').value=el.classe||'';
+  $('modal-edit').classList.add('on');
+}
+function closeEdit(){ $('modal-edit').classList.remove('on'); }
+async function saveEdit(){
+  S.eleve.prenom=$('e-prenom').value.trim(); S.eleve.nom=$('e-nom').value.trim(); S.eleve.classe=$('e-classe').value;
+  loading(true,'Sauvegarde…');
+  await DB.saveEleve(S.eleve);
+  $('hdr-title').textContent='👤 '+lbl(S.eleve);
+  $('hdr-sub').textContent=S.eleve.classe||'—';
+  renderProfil();
+  closeEdit();
+  toast('Élève modifié ✓','ok');
+  loading(false);
+}
+
+// ================================================================
+// IMPORT (depuis tableau de bord)
+// ================================================================
+function openImportModal(){
+  $('modal-import').classList.add('on');
+  $('imp-s1').classList.add('on'); $('imp-s2').classList.remove('on');
+  $('imp-paste').value='';
+}
+function closeImport(){ $('modal-import').classList.remove('on'); }
+function impBack(){ $('imp-s1').classList.add('on'); $('imp-s2').classList.remove('on'); }
+
+function impPreview(){
+  const text=$('imp-paste').value.trim();
+  if(!text){toast('Collez une liste d\'élèves','err');return;}
+  const parsed=parseList(text,'ifmt');
+  if(!parsed.length){toast('Aucun élève reconnu','err');return;}
+  const existing=DB.getEleves(S.currentGroupe);  // filtre par groupe actif
+  const rows=buildPreviewRows(parsed,existing);
+  window._impIds=existing.map(e=>e.id);
+  $('imp-count').textContent=`${parsed.length} élève${parsed.length>1?'s':''} détecté${parsed.length>1?'s':''}`;
+  $('imp-tbody').innerHTML=previewTableHTML(rows,'imp');
+  $('imp-s1').classList.remove('on'); $('imp-s2').classList.add('on');
+}
+
+async function impConfirm(){
+  const ids=window._impIds||[];
+  const rows=collectRows('imp',ids.length);
+  const eleves=ids.map((id,i)=>({id,nom:rows[i].nom,prenom:rows[i].prenom,classe:rows[i].classe}));
+  loading(true,'Mise à jour…');
+  await DB.saveAllEleves(eleves, S.currentGroupe);  // groupe actif
+  closeImport();
+  toast(`Liste mise à jour ✓`,'ok');
+  loading(false);
+  renderDash();
+}
+
+// ================================================================
+// EXPORT / IMPORT JSON
+// ================================================================
+function exportData(){
+  const d={ eleves:CACHE.eleves, evaluations:CACHE.evaluations };
+  const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='sauvegarde_mcv_'+new Date().toLocaleDateString('fr-FR').replace(/\//g,'-')+'.json';
+  a.click(); URL.revokeObjectURL(a.href);
+  toast('Sauvegarde exportée ✓','ok');
+}
+
+async function importData(evt){
+  const file=evt.target.files?.[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      if(!d.eleves||!d.evaluations) throw new Error('Format invalide');
+      if(!confirm(`Importer ce fichier ?\n${d.eleves.length} élèves, ${d.evaluations.length} évaluations.\nCela remplacera TOUTES les données actuelles sur Supabase.`)) return;
+      loading(true,'Réinitialisation…');
+      await DB.resetAll();
+      if(d.eleves.length){
+        await supaFetch('eleves','POST',d.eleves.map((el,i)=>({
+          id:el.id,nom:el.nom||'',prenom:el.prenom||'',classe:el.classe||'',ordre:i
+        })));
+      }
+      const evRows=d.evaluations.map(ev=>({
+        id:ev.id,eleve_id:ev.eleveId,num_tp:ev.numTP||'',nom_tp:ev.nomTP||'',
+        classe:ev.classe||'',epreuve:ev.epreuve||'',pfmp:ev.pfmp||'',
+        meta_comp_id:ev.metaCompId||'',meta_comp_nom:ev.metaCompNom||'',
+        competence:ev.competence||'',niveau_maitrise:ev.niveauMaitrise||'',
+        note:ev.note||0,date_saisie:ev.dateSaisie||'',enseignant:ev.enseignant||''
+      }));
+      for(let i=0;i<evRows.length;i+=100){
+        await supaFetch('evaluations','POST',evRows.slice(i,i+100));
+      }
+      await DB.loadAll();
+      loading(false);
+      toast('Données importées ✓','ok');
+      renderDash();
+    }catch(err){ loading(false); toast('Erreur : '+err.message,'err'); }
+  };
+  reader.readAsText(file);
+  evt.target.value='';
+}
+
+async function confirmReset(){
+  if(!confirm('⚠️ Réinitialiser TOUTES les données ?\nÉlèves et évaluations seront définitivement effacés de Supabase.')) return;
+  loading(true,'Réinitialisation…');
+  await DB.resetAll();
+  loading(false);
+  toast('Données réinitialisées','info');
+  location.reload();
+}
+
+// ================================================================
+// DÉMARRAGE — SUPABASE
+// ================================================================
+function showConfigError(msg=''){
+  $('students-grid') && ($('students-grid').innerHTML='');
+  const grid=$('dash-grid');
+  if(grid) grid.innerHTML=`
+    <div style="grid-column:1/-1;background:var(--white);border-radius:var(--r);padding:32px;
+         border-left:5px solid var(--red);box-shadow:var(--shadow)">
+      <div style="font-size:1rem;font-weight:800;color:var(--red);margin-bottom:12px">⚙️ Configuration Supabase requise</div>
+      <p style="color:var(--text2);margin-bottom:14px">Ouvrez le fichier HTML dans un éditeur de texte et renseignez vos identifiants Supabase :</p>
+      <pre style="background:var(--bg);padding:14px 16px;border-radius:var(--r-sm);font-family:var(--mono);font-size:.8rem;overflow:auto;border:1px solid var(--border)">const SUPA_URL = 'https://VOTRE_ID.supabase.co';
+const SUPA_KEY = 'VOTRE_CLE_ANON_PUBLIQUE';</pre>
+      <p style="margin-top:12px;font-size:.82rem;color:var(--text3)">Ces valeurs se trouvent dans Supabase → Settings → API.</p>
+      ${msg?`<p style="color:var(--red);font-size:.8rem;margin-top:10px;font-family:var(--mono)">Erreur : ${esc(msg)}</p>`:''}
+    </div>`;
+  showView('dashboard');
+}
+
+window.addEventListener('DOMContentLoaded', async ()=>{
+  renderHdrActions();
+  initTeacherBanner();
+
+  // Vérifier la config
+  if(SUPA_URL.includes('VOTRE_ID') || SUPA_KEY.includes('VOTRE_CLE')){
+    showConfigError();
+    return;
+  }
+
+  loading(true,'Connexion à Supabase…');
+  try{
+    await DB.loadAll();
+    if(DB.hasData()){ renderDash(); showView('dashboard'); }
+    else showView('setup');
+  }catch(e){
+    showConfigError(e.message);
+  }
+  loading(false);
+
+  // Auto-sync toutes les 60 secondes si la page est visible et sur le dashboard
+  setInterval(async ()=>{
+    if(document.visibilityState==='visible' && S.view==='dashboard'){
+      try{
+        await DB.loadAll();
+        renderDash($('search')?.value||'');
+      }catch(_){}
+    }
+  }, 60000);
+});
+</script>
+
+<!-- ===== MODAL SAISIE GROUPÉE (P6) ===== -->
+<div class="modal-bg" id="modal-groupe" onclick="if(event.target===this)closeGroupe()">
+  <div class="modal modal-xl">
+    <h3>👥 Saisie groupée — même TP pour toute la classe</h3>
+
+    <!-- Étape 1 : configurer le TP et les compétences -->
+    <div class="grp-step on" id="grp-s1">
+      <div class="alert alert-info" style="margin-bottom:14px">
+        Définissez d'abord le TP et les compétences évaluées, identiques pour tous les élèves.<br>
+        Vous noterez ensuite chaque élève individuellement.
+      </div>
+      <div class="form-row" style="margin-bottom:14px">
+        <div class="form-group" style="max-width:120px">
+          <label>N° TP</label>
+          <select id="g-num"></select>
+        </div>
+        <div class="form-group">
+          <label>Intitulé du TP <span style="font-weight:400;color:var(--text3)">(optionnel)</span></label>
+          <input type="text" id="g-nom" placeholder="Ex : Enquête de satisfaction, Accueil client…" maxlength="80"
+                 style="width:100%;padding:9px 12px;border:2px solid var(--border);border-radius:var(--r-sm);font-size:.88rem;outline:none;font-family:var(--font)">
+        </div>
+        <div class="form-group" style="max-width:200px">
+          <label>Épreuve</label>
+          <select id="g-ep" onchange="renderGrpMC()">
+            <option value="E31">E31 — Vente-conseil</option>
+            <option value="E32">E32 — Suivi des ventes</option>
+          </select>
+        </div>
+        <div class="form-group" style="max-width:200px">
+          <label>Classe de réalisation</label>
+          <select id="g-classe">
+            <option value="2nde MRC">2nde MRC</option>
+            <option value="1ère BAC PRO MCV">1ère BAC PRO MCV</option>
+            <option value="Terminale BAC PRO MCV">Terminale BAC PRO MCV</option>
+          </select>
+        </div>
+        <div class="form-group" style="max-width:200px">
+          <label>Contexte</label>
+          <select id="g-pfmp">
+            <option value="Formation en établissement">🏫 Formation en établissement</option>
+            <option value="PFMP 1">🏢 PFMP 1</option>
+            <option value="PFMP 2">🏢 PFMP 2</option>
+            <option value="PFMP 3">🏢 PFMP 3</option>
+            <option value="PFMP 4">🏢 PFMP 4</option>
+          </select>
+        </div>
+      </div>
+      <div style="font-size:.78rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">
+        Compétences évaluées dans ce TP (cocher une ou plusieurs) :
+      </div>
+      <div id="grp-mc-list" style="max-height:40vh;overflow-y:auto"></div>
+      <div class="modal-actions">
+        <button class="btn btn-g" onclick="closeGroupe()">Annuler</button>
+        <button class="btn btn-p" onclick="grpGoStep2()">Suivant — Noter les élèves →</button>
+      </div>
+    </div>
+
+    <!-- Étape 2 : noter chaque élève -->
+    <div class="grp-step" id="grp-s2">
+      <div class="grp-progress" id="grp-progress"></div>
+      <div class="modal-body" style="max-height:60vh;overflow-y:auto">
+        <table class="grp-table" id="grp-table"></table>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-g" onclick="grpBack()">← Retour</button>
+        <button class="btn btn-g" onclick="closeGroupe()">Annuler</button>
+        <button class="btn btn-p" onclick="grpSave()">💾 Enregistrer pour tous</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL VUE ÉLÈVE (P8) ===== -->
+<div class="modal-bg" id="modal-eleve-view" onclick="if(event.target===this)closeEleveView()">
+  <div class="modal modal-eleve">
+    <div class="eleve-view-hdr">
+      <div class="eleve-view-name" id="ev-name">—</div>
+      <div class="eleve-view-sub" id="ev-sub">—</div>
+    </div>
+    <div class="eleve-view-body" id="ev-body"></div>
+    <div class="modal-actions no-print" style="padding:0 24px 18px">
+      <button class="btn btn-g" onclick="closeEleveView()">Fermer</button>
+      <button class="btn btn-p" onclick="printEleveView()">🖨️ Imprimer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL RENOMMER CLASSE ===== -->
+<div class="modal-bg" id="modal-rename" onclick="if(event.target===this)closeRename()">
+  <div class="modal modal-sm">
+    <h3 id="rename-title">✏️ Renommer la classe</h3>
+    <label>Nom de la classe</label>
+    <input type="text" id="rename-input" placeholder="Ex : Term. MCVA, 1ère MCVB…" maxlength="40">
+    <div class="modal-actions">
+      <button class="btn btn-g" onclick="closeRename()">Annuler</button>
+      <button class="btn btn-p" onclick="confirmRename()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="app-footer">
+  Suivi des compétences BAC PRO MCV Option A — E31 / E32 &nbsp;·&nbsp; Outil créé par Olivier NUGUET &nbsp;·&nbsp; Région académique Guyane
+  <br>
+  <button class="btn btn-r btn-sm" onclick="confirmReset()"
+    style="margin-top:10px;font-size:.65rem;padding:4px 12px;opacity:.6"
+    title="Effacer toutes les données">🗑 Réinitialiser toutes les données</button>
+</footer>
+
+</body>
+</html>
